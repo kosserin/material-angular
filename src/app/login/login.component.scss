@@ -1,0 +1,45 @@
+@import "../../forms.scss";
+
+:host {
+  main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  section,
+  .illustration {
+    flex-grow: 1;
+  }
+
+  section {
+    padding: 5vw;
+  }
+
+  .logo {
+    width: 64px;
+  }
+
+  h1 {
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    color: gray;
+    margin-bottom: 24px;
+  }
+
+  .wrapper {
+    text-align: center;
+  }
+
+  .illustration {
+    width: 300px;
+  }
+}

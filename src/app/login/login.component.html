@@ -1,0 +1,55 @@
+<main>
+  <section>
+    <div class="wrapper">
+      <img class="logo" src="/assets/image.png" alt="" />
+      <h1>Welcome abroad!</h1>
+      <p class="subtitle">Please sign in.</p>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input
+            formControlName="username"
+            matInput
+            placeholder="e.g johndev"
+          />
+          @if (loginForm.controls.username.hasError('required')) {
+          <mat-error>Required</mat-error>}
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Enter your password</mat-label>
+          <input
+            formControlName="password"
+            matInput
+            [type]="hide() ? 'password' : 'text'"
+          />
+          @if (loginForm.controls.password.hasError('required')) {
+          <mat-error>Required</mat-error>
+          } @else if (loginForm.controls.password.invalid) {
+          <mat-error>Password should be at least 8 characters long.</mat-error>
+          }
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="clickEvent($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide()"
+          >
+            <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+        </mat-form-field>
+        <button
+          [class.spinner]="loading"
+          [disabled]="loading"
+          type="submit"
+          mat-flat-button
+          color="primary"
+          class="form-button"
+        >
+          Login
+        </button>
+        <p class="error">{{ error }}</p>
+      </form>
+    </div>
+  </section>
+  <img class="illustration" src="/assets/20944201.jpg" alt="" />
+</main>

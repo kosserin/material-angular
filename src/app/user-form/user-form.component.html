@@ -1,0 +1,116 @@
+<main>
+  <app-page-header></app-page-header>
+  <section>
+    <h1>{{ title }}</h1>
+    <p>{{ text }}</p>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input formControlName="username" matInput placeholder="e.g johndev" />
+        @if (userForm.controls.username.hasError('required')) {
+        <mat-error>Required</mat-error>}
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Enter your password</mat-label>
+        <input
+          formControlName="password"
+          matInput
+          [type]="hide() ? 'password' : 'text'"
+        />
+        @if (userForm.controls.password.hasError('required')) {
+        <mat-error>Required</mat-error>
+        } @else if (userForm.controls.password.invalid) {
+        <mat-error>Password should be at least 8 characters long.</mat-error>
+        }
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="clickEvent($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide()"
+        >
+          <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>First name</mat-label>
+        <input formControlName="firstname" matInput placeholder="John" />
+        @if (userForm.controls.firstname.hasError('required')) {
+        <mat-error>Required</mat-error>}
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Last name</mat-label>
+        <input formControlName="lastname" matInput placeholder="Doe" />
+        @if (userForm.controls.lastname.hasError('required')) {
+        <mat-error>Required</mat-error>}
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input
+          formControlName="email"
+          matInput
+          placeholder="johndev@gmail.com"
+        />
+        @if (userForm.controls.email.hasError('required')) {
+        <mat-error>Required</mat-error>
+        }
+      </mat-form-field>
+      <div class="city-wrapper" formGroupName="city">
+        <mat-form-field appearance="outline">
+          <mat-label>City name</mat-label>
+          <input formControlName="name" matInput placeholder="Velika Plana" />
+          @if (userForm.get('city.name')!.hasError('required')) {
+          <mat-error>Required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="city-wrapper" formGroupName="city">
+        <mat-form-field appearance="outline">
+          <mat-label>Postal code</mat-label>
+          <input formControlName="postalcode" matInput placeholder="11320" />
+          @if (userForm.get('city.postalcode')!.hasError('required')) {
+          <mat-error>Required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <mat-select formControlName="title">
+          @for (title of titles; track title) {
+          <mat-option [value]="title.value">{{ title.text }}</mat-option>
+          }
+        </mat-select>
+        @if (userForm.controls.title.hasError('required')) {
+        <mat-error>Required</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Roles</mat-label>
+        <mat-select formControlName="roleList" multiple>
+          @for (role of roles; track role) {
+          <mat-option [value]="role.value">{{ role.text }}</mat-option>
+          }
+        </mat-select>
+        @if (userForm.controls.roleList.hasError('required')) {
+        <mat-error>Required</mat-error>
+        }
+      </mat-form-field>
+      <div class="buttons-wrapper">
+        <button
+          [class.spinner]="loading"
+          [disabled]="loading"
+          type="submit"
+          mat-flat-button
+          color="primary"
+          class="form-button"
+        >
+          {{ buttonText }}
+        </button>
+        <button mat-stroked-button (click)="navigateBack()" class="form-button">
+          Cancel
+        </button>
+      </div>
+      <p class="error">{{ error }}</p>
+    </form>
+  </section>
+</main>

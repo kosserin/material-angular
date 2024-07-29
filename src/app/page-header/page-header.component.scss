@@ -1,0 +1,53 @@
+:host {
+  header {
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 24px 5vw;
+    border-bottom: 1px solid rgb(235, 235, 235);
+
+    h1 {
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+
+      h2 {
+        margin: 0;
+      }
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 0;
+    margin: 0;
+
+    a {
+      text-decoration: none;
+      color: #000000;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+
+      &:hover {
+        color: rgb(0, 0, 176);
+      }
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .nav-links {
+      gap: 48px;
+    }
+  }
+}

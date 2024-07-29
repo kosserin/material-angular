@@ -1,0 +1,23 @@
+:host {
+  main {
+    min-height: 100vh;
+    background-color: rgb(244, 244, 244);
+  }
+
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 64px;
+  }
+
+  .image-wrapper,
+  section {
+    flex: 1;
+  }
+
+  img {
+    width: 100%;
+    display: block;
+  }
+}

@@ -1,0 +1,47 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+}
+
+.buttons-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.form-button {
+  height: 48px;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner:before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  border-top-color: var(--primary);
+  animation: spinner 0.8s linear infinite;
+}
+
+.error {
+  color: rgb(228, 57, 57);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  width: 100%;
+}
