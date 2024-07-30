@@ -71,6 +71,7 @@ export class UserFormComponent implements OnInit {
       value: Role.Owner,
     },
   ];
+  Mode = Mode;
 
   constructor(
     private route: ActivatedRoute,
@@ -82,8 +83,6 @@ export class UserFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe((data) => {
-      console.log(data);
-
       this.mode = data['mode'];
       this.role = data['role'];
       const user: UserItem | undefined = data['user'];
@@ -146,8 +145,6 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.userForm.value);
-
     if (this.userForm.valid) {
       const {
         username,

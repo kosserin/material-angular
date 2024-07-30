@@ -9,4 +9,5 @@ export interface User {
   enabled: boolean;
   authorities: { authority: Role }[];
   token: string;
+  username: string;
 }

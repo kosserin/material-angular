@@ -7,5 +7,107 @@
       members. Use the search function to locate specific managers or employees,
       and click "Assign Manager" to set up new management relationships.
     </p>
+
+    <div class="wrapper">
+      <h2>Search for management</h2>
+      <form [formGroup]="searchForm" (ngSubmit)="searchForManagement()">
+        <mat-form-field appearance="outline">
+          <mat-label>Management id</mat-label>
+          <input
+            formControlName="managementId"
+            matInput
+            placeholder="e.g johndev"
+          />
+          @if (searchForm.controls['managementId'].hasError('required')) {
+          <mat-error>Required</mat-error>} @if
+          (searchForm.controls['managementId'].hasError('minlength')) {
+          <mat-error>Minimum length is 2.</mat-error>}
+        </mat-form-field>
+        <button
+          class="form-button"
+          color="primary"
+          type="submit"
+          mat-flat-button
+        >
+          Search
+        </button>
+      </form>
+    </div>
+
+    <div class="wrapper">
+      <h2>Assign manager to employee</h2>
+      <form [formGroup]="assignForm" (ngSubmit)="createManagement()">
+        <mat-form-field appearance="outline">
+          <mat-label>Manager username</mat-label>
+          <input
+            formControlName="managerUsername"
+            matInput
+            placeholder="e.g johndev"
+          />
+          @if (assignForm.controls['managerUsername'].hasError('required')) {
+          <mat-error>Required</mat-error>} @if
+          (assignForm.controls['managerUsername'].hasError('minlength')) {
+          <mat-error>Minimum length is 2.</mat-error>}
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Employee username</mat-label>
+          <input
+            formControlName="employeeUsername"
+            matInput
+            placeholder="e.g johndev"
+          />
+          @if (assignForm.controls['employeeUsername'].hasError('required')) {
+          <mat-error>Required</mat-error>} @if
+          (assignForm.controls['employeeUsername'].hasError('minlength')) {
+          <mat-error>Minimum length is 2.</mat-error>}
+        </mat-form-field>
+        <button
+          class="form-button"
+          color="primary"
+          type="submit"
+          mat-flat-button
+        >
+          Create management
+        </button>
+      </form>
+    </div>
+
+    <div class="wrapper">
+      <h2>Update manager of an employee</h2>
+      <form [formGroup]="updateForm" (ngSubmit)="createManagement()">
+        <mat-form-field appearance="outline">
+          <mat-label>Manager username</mat-label>
+          <input
+            formControlName="managerUsername"
+            matInput
+            placeholder="e.g johndev"
+          />
+          @if (updateForm.controls['managerUsername'].hasError('required')) {
+          <mat-error>Required</mat-error>} @if
+          (updateForm.controls['managerUsername'].hasError('minlength')) {
+          <mat-error>Minimum length is 2.</mat-error>}
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Employee username</mat-label>
+          <input
+            formControlName="employeeUsername"
+            matInput
+            placeholder="e.g johndev"
+          />
+          @if (updateForm.controls['employeeUsername'].hasError('required')) {
+          <mat-error>Required</mat-error>} @if
+          (updateForm.controls['employeeUsername'].hasError('minlength')) {
+          <mat-error>Minimum length is 2.</mat-error>}
+        </mat-form-field>
+        <button
+          class="form-button"
+          color="primary"
+          type="submit"
+          mat-flat-button
+        >
+          Update
+        </button>
+      </form>
+    </div>
   </section>
 </main>

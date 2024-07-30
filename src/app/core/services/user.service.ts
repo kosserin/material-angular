@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { UserItem } from '../models/user-list.model';
 import { Role } from '../models/role';
+import { PageRequest } from '../models/page-request.model';
+import { PageResponse } from '../models/page.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +12,15 @@ import { Role } from '../models/role';
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  getUsers() {
-    const url = `${environment.apiUrl}users`;
-    return this.http.get<UserItem[]>(url);
+  getUsers(pageRequest: PageRequest) {
+    const params = new HttpParams()
+      .set('pageNo', pageRequest.pageNo - 1)
+      .set('pageSize', pageRequest.pageSize)
+      .set('sortBy', pageRequest.sortBy)
+      .set('sortOrder', pageRequest.sortOrder);
+
+    const url = `${environment.apiUrl}users/filter`;
+    return this.http.get<PageResponse<UserItem>>(url, { params });
   }
 
   getByUsername(username: string) {
@@ -47,8 +55,8 @@ export class UserService {
   }
 
   getManagerByEmployeesName(employeeUsername: string) {
-    const url = `${environment.apiUrl}manager/${employeeUsername}`;
+    const url = `${environment.apiUrl}developer/manager/${employeeUsername}`;
 
-    return this.http.get(url);
+    return this.http.get<string>(url);
   }
 }

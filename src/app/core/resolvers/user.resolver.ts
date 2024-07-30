@@ -19,7 +19,6 @@ export class UserResolver {
     state: RouterStateSnapshot
   ): Observable<UserItem | undefined> {
     const username = route.paramMap.get('username');
-    console.log(username);
 
     if (username) {
       return this.userService.getByUsername(username);

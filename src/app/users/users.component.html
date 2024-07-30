@@ -1,53 +1,69 @@
 <main>
   <app-page-header></app-page-header>
-  @if (!error && !isLoadingUsers){
+  @if (role === Role.Employee && managerNameOfEmployee) {
+  <section>
+    <h1>User Management</h1>
+    <p class="max-w-600">On this page you can see who is your manager.</p>
+    <h3>Your manager is: {{ managerNameOfEmployee }}</h3>
+  </section>
+  } @if (!error && role !== Role.Employee){
   <section>
     <h1>User Management</h1>
     <p class="max-w-600">
       View and manage the list of all users. Use the search feature to find
       specific users or click "Add User" to include a new member.
     </p>
-    <button color="primary" mat-flat-button (click)="navigateToCreateUser()">
+    <button
+      class="basic-button"
+      color="primary"
+      mat-flat-button
+      (click)="navigateToCreateUser()"
+    >
       Add user
     </button>
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="username">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>Username</th>
+          <td mat-cell *matCellDef="let element">{{ element.username }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="firstname">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>First Name</th>
           <td mat-cell *matCellDef="let element">{{ element.firstname }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="surname">
-          <th mat-header-cell *matHeaderCellDef>Surname</th>
+        <ng-container matColumnDef="lastname">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>Last Name</th>
           <td mat-cell *matCellDef="let element">{{ element.lastname }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="role">
-          <th mat-header-cell *matHeaderCellDef>Role</th>
+        <ng-container matColumnDef="authoritiesList">
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>Role</th>
           <td mat-cell *matCellDef="let element">
             {{ getUserRoles(element.roleList) }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>Title</th>
           <td mat-cell *matCellDef="let element">
             {{ getUserTitles(element.title) }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>Email</th>
           <td mat-cell *matCellDef="let element">{{ element.email }}</td>
         </ng-container>
 
         <ng-container matColumnDef="city">
-          <th mat-header-cell *matHeaderCellDef>City</th>
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>City</th>
           <td mat-cell *matCellDef="let element">{{ element.city.name }}</td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <th mat-sort-header mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let element">
             <i
               (click)="navigateToEditUser(element)"

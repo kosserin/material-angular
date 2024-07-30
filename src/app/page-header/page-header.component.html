@@ -4,9 +4,7 @@
     <h2>{{ user.firstname }}</h2>
   </div>
   <ul class="nav-links">
-    @if (canSeeUsers()) {
     <a (click)="navigateToUsers()">Users</a>
-    }
     <a (click)="navigateToAnnualLeave()">Annual leaves</a>
     @if (canSeeProjects()) {
     <a (click)="navigateToProjects()">Projects</a>

@@ -25,7 +25,6 @@ export class PageHeaderComponent {
 
   ngOnInit(): void {
     this.route.data.subscribe((data) => {
-      console.log(data['role']);
       this.role = data['role'];
     });
 
@@ -44,16 +43,8 @@ export class PageHeaderComponent {
     return !!this.user.authorities.find((a) => a.authority === Role.Owner);
   }
 
-  canSeeUsers(): boolean {
-    return !!this.user.authorities.find(
-      (a) => a.authority === (Role.Owner || Role.Manager)
-    );
-  }
-
   canSeeManagement(): boolean {
-    return !!this.user.authorities.find(
-      (a) => a.authority === (Role.Owner || Role.Manager)
-    );
+    return !!this.user.authorities.find((a) => a.authority === Role.Owner);
   }
 
   navigateToDashboard() {

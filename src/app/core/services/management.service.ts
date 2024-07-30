@@ -15,11 +15,11 @@ export class ManagementService {
 
   updateManagerForEmployee(managerUsername: string, employeeUsername: string) {
     const url = `${environment.apiUrl}management/${managerUsername}/${employeeUsername}`;
-    return this.http.patch(url);
+    return this.http.patch(url, {});
   }
 
   createManagement(managerUsername: string, employeeUsername: string) {
     const url = `${environment.apiUrl}management/${managerUsername}/${employeeUsername}`;
-    return this.http.post(url);
+    return this.http.post(url, {});
   }
 }

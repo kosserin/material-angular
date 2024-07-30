@@ -5,11 +5,25 @@
     <p>{{ text }}</p>
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="outline">
+        <mat-label>First name</mat-label>
+        <input formControlName="firstname" matInput placeholder="John" />
+        @if (userForm.controls['firstname'].hasError('required')) {
+        <mat-error>Required</mat-error>}
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Last name</mat-label>
+        <input formControlName="lastname" matInput placeholder="Doe" />
+        @if (userForm.controls['lastname'].hasError('required')) {
+        <mat-error>Required</mat-error>}
+      </mat-form-field>
+      @if (mode === Mode.Insert) {
+      <mat-form-field appearance="outline">
         <mat-label>Username</mat-label>
         <input formControlName="username" matInput placeholder="e.g johndev" />
         @if (userForm.controls['username'].hasError('required')) {
         <mat-error>Required</mat-error>}
       </mat-form-field>
+      }
       <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
         <input
@@ -31,18 +45,6 @@
         >
           <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
         </button>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>First name</mat-label>
-        <input formControlName="firstname" matInput placeholder="John" />
-        @if (userForm.controls['firstname'].hasError('required')) {
-        <mat-error>Required</mat-error>}
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Last name</mat-label>
-        <input formControlName="lastname" matInput placeholder="Doe" />
-        @if (userForm.controls['lastname'].hasError('required')) {
-        <mat-error>Required</mat-error>}
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>

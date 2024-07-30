@@ -16,12 +16,12 @@ export class AnnualLeaveService {
 
   rejectAnnualLeave(managerUsername: string, employeeUsername: string) {
     const url = `${environment.apiUrl}annual_leave_manager/${managerUsername}/${employeeUsername}`;
-    return this.http.patch(url);
+    return this.http.patch(url, {});
   }
 
   approveAnnualLeave(managerUsername: string, employeeUsername: string) {
     const url = `${environment.apiUrl}annual_leave_manager/${managerUsername}/${employeeUsername}`;
-    return this.http.post(url);
+    return this.http.post(url, {});
   }
 
   getDaysLeft(employeeUsername: string) {

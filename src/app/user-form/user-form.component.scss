@@ -29,8 +29,8 @@
   .buttons-wrapper {
     grid-column: 1 / -1;
 
-    button {
-      min-width: 120px;
+    .form-button {
+      padding-inline: 32px;
     }
   }
 }

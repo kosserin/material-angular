@@ -13,8 +13,6 @@ export class AuthGuard {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    console.log(route);
-
     if (this.authService.currentUserValue.authorities) {
       const userRoles = this.authService.currentUserValue.authorities;
       if (userRoles.some((a) => a.authority === route.data['role'])) {
