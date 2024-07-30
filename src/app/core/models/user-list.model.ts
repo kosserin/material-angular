@@ -7,10 +7,12 @@ export interface UserItem {
   firstname: string;
   lastname: string;
   email: string;
-  city: {
-    postalcode: number;
-    name: string;
-  };
+  city: City;
   title: UserTitle;
   roleList: Role[];
+}
+
+export interface City {
+  postalcode: number;
+  name: string;
 }

@@ -8,7 +8,6 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 64px;
   }
 
   .image-wrapper,
@@ -19,5 +18,11 @@
   img {
     width: 100%;
     display: block;
+    min-width: 300px;
+  }
+
+  section {
+    padding: 2rem 5vw;
+    min-width: 300px;
   }
 }

@@ -61,8 +61,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  navigateToEditUser(username: string) {
-    this.router.navigate(['edit', username], { relativeTo: this.route });
+  navigateToEditUser(element: UserItem) {
+    this.router.navigate(['edit', element.username], { relativeTo: this.route });
   }
 
   navigateToCreateUser() {

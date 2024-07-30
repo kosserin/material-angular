@@ -5,6 +5,7 @@ import { Mode } from '../core/models/mode.model';
 import {
   FormControl,
   FormGroup,
+  NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -17,6 +18,8 @@ import { Location } from '@angular/common';
 import { UserTitle } from '../core/models/user-title.model';
 import { MatSelectModule } from '@angular/material/select';
 import { Role } from '../core/models/role';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserItem } from '../core/models/user-list.model';
 
 @Component({
   selector: 'app-user-form',
@@ -34,20 +37,9 @@ import { Role } from '../core/models/role';
   styleUrl: './user-form.component.scss',
 })
 export class UserFormComponent implements OnInit {
+  role!: Role;
   mode!: Mode;
-  userForm = new FormGroup({
-    firstname: new FormControl('', [Validators.required]),
-    lastname: new FormControl('', [Validators.required]),
-    username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
-    title: new FormControl(UserTitle.Junior, [Validators.required]),
-    roleList: new FormControl([], [Validators.required]),
-    city: new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      postalcode: new FormControl('', [Validators.required]),
-    }),
-  });
+  userForm!: FormGroup;
   hide = signal(true);
   loading = false;
   error?: string;
@@ -83,12 +75,43 @@ export class UserFormComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-    private location: Location
+    private location: Location,
+    private snackBar: MatSnackBar,
+    private fb: NonNullableFormBuilder
   ) {}
 
   ngOnInit(): void {
     this.route.data.subscribe((data) => {
+      console.log(data);
+
       this.mode = data['mode'];
+      this.role = data['role'];
+      const user: UserItem | undefined = data['user'];
+      this.userForm = this.fb.group({
+        firstname: new FormControl(user?.firstname ?? '', [
+          Validators.required,
+        ]),
+        lastname: new FormControl(user?.lastname ?? '', [Validators.required]),
+        username: new FormControl(user?.username ?? '', [Validators.required]),
+        password: new FormControl(user?.password ?? '', [
+          Validators.required,
+          Validators.minLength(8),
+        ]),
+        email: new FormControl(user?.email ?? '', [
+          Validators.required,
+          Validators.email,
+        ]),
+        title: new FormControl(user?.title ?? UserTitle.Junior, [
+          Validators.required,
+        ]),
+        roleList: new FormControl(user?.roleList ?? [], [Validators.required]),
+        city: new FormGroup({
+          name: new FormControl(user?.city.name ?? '', [Validators.required]),
+          postalcode: new FormControl(user?.city.postalcode ?? '', [
+            Validators.required,
+          ]),
+        }),
+      });
     });
   }
 
@@ -160,12 +183,48 @@ export class UserFormComponent implements OnInit {
           roleList,
           title,
         };
-        this.userService.createUser(formData).subscribe();
+
+        if (this.mode === Mode.Insert) {
+          this.userService.createUser(formData, this.role).subscribe({
+            next: () => {
+              this.snackBar.open('You successfully added new user.', '', {
+                duration: 2000,
+              });
+              setTimeout(() => {
+                this.location.back();
+              }, 2000);
+            },
+            error: () => {
+              this.snackBar.open('Something went wrong.', '', {
+                duration: 2000,
+              });
+            },
+          });
+        }
+
+        if (this.mode === Mode.Edit) {
+          this.userService.updateUser(formData, this.role).subscribe({
+            next: () => {
+              this.snackBar.open('You successfully updated user.', '', {
+                duration: 2000,
+              });
+              setTimeout(() => {
+                this.location.back();
+              }, 2000);
+            },
+            error: () => {
+              this.snackBar.open('Something went wrong.', '', {
+                duration: 2000,
+              });
+            },
+          });
+        }
       }
     }
   }
 
-  navigateBack() {
+  navigateBack(e: Event) {
+    e.preventDefault();
     this.location.back();
   }
 }
