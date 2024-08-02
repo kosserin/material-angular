@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { ManagementResponse } from '../models/management.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class ManagementService {
 
   getManagementById(id: string) {
     const url = `${environment.apiUrl}management/${id}`;
-    return this.http.get(url);
+    return this.http.get<ManagementResponse>(url);
   }
 
   updateManagerForEmployee(managerUsername: string, employeeUsername: string) {

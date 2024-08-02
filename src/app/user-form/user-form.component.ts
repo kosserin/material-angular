@@ -192,7 +192,7 @@ export class UserFormComponent implements OnInit {
               }, 2000);
             },
             error: () => {
-              this.snackBar.open('Something went wrong.', '', {
+              this.snackBar.open('Something went wrong with adding new user.', '', {
                 duration: 2000,
               });
             },
@@ -210,7 +210,7 @@ export class UserFormComponent implements OnInit {
               }, 2000);
             },
             error: () => {
-              this.snackBar.open('Something went wrong.', '', {
+              this.snackBar.open('Something went wrong with updating user.', '', {
                 duration: 2000,
               });
             },

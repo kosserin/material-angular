@@ -39,10 +39,6 @@ export class PageHeaderComponent {
     });
   }
 
-  canSeeProjects(): boolean {
-    return !!this.user.authorities.find((a) => a.authority === Role.Owner);
-  }
-
   canSeeManagement(): boolean {
     return !!this.user.authorities.find((a) => a.authority === Role.Owner);
   }

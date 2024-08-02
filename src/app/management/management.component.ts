@@ -27,6 +27,7 @@ export class ManagementComponent implements OnInit {
   searchForm!: FormGroup;
   assignForm!: FormGroup;
   updateForm!: FormGroup;
+  textToDisplayForSearchManagement = '';
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -36,7 +37,7 @@ export class ManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchForm = this.fb.group({
-      managementId: ['', [Validators.required, Validators.minLength(2)]],
+      managementId: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
     });
     this.assignForm = this.fb.group({
       managerUsername: ['', [Validators.required, Validators.minLength(2)]],
@@ -56,12 +57,11 @@ export class ManagementComponent implements OnInit {
     const managementId = this.searchForm.controls['managementId'].value;
 
     this.managementService.getManagementById(managementId).subscribe({
-      next: (management) => {
-        this.snackBar.open('You successfully created management.', '', {
-          duration: 2000,
-        });
+      next: (managementResponse) => {
+        this.textToDisplayForSearchManagement = `Employee <b>${managementResponse.employee.username}</b> is under management of <b>${managementResponse.manager.username}</b>`;
       },
       error: () => {
+        this.textToDisplayForSearchManagement = '';
         this.snackBar.open(
           'Something went wrong while searching for management.',
           '',

@@ -73,6 +73,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (this.role === Role.Employee) {
+      return;
+    }
+
     this.dataSource.sort = this.sort;
 
     this.sort.sortChange.subscribe((sort) => {
@@ -95,7 +99,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   navigateToEditUser(element: UserItem) {
-    this.router.navigate(['edit', element.username], {
+    this.router.navigate([element.username, 'edit'], {
       relativeTo: this.route,
     });
   }
@@ -145,6 +149,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
       .getManagerByEmployeesName(this.authService.currentUserValue.username)
       .subscribe({
         next: (managerName) => {
+          console.log(managerName);
           this.managerNameOfEmployee = managerName;
         },
       });

@@ -13,15 +13,11 @@
       <form [formGroup]="searchForm" (ngSubmit)="searchForManagement()">
         <mat-form-field appearance="outline">
           <mat-label>Management id</mat-label>
-          <input
-            formControlName="managementId"
-            matInput
-            placeholder="e.g johndev"
-          />
+          <input formControlName="managementId" matInput placeholder="e.g 12" />
           @if (searchForm.controls['managementId'].hasError('required')) {
           <mat-error>Required</mat-error>} @if
-          (searchForm.controls['managementId'].hasError('minlength')) {
-          <mat-error>Minimum length is 2.</mat-error>}
+          (searchForm.controls['managementId'].hasError('pattern')) {
+          <mat-error>Should contain only numbers</mat-error>}
         </mat-form-field>
         <button
           class="form-button"
@@ -31,6 +27,9 @@
         >
           Search
         </button>
+        @if (textToDisplayForSearchManagement) {
+        <p class="no-margin" [innerHTML]="textToDisplayForSearchManagement"></p>
+        }
       </form>
     </div>
 

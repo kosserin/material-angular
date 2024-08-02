@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { ExistingProject, NewProject } from '../models/project.model';
+import {
+  ExistingProject,
+  GetProjectWorkResponse,
+  NewProject,
+} from '../models/project.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,9 +24,9 @@ export class ProjectService {
     return this.http.post(url, project);
   }
 
-  getProjectById(id: number) {
+  getProjectById(id: number): Observable<ExistingProject> {
     const url = `${environment.apiUrl}projects_owner/${id}`;
-    return this.http.get(url);
+    return this.http.get<ExistingProject>(url);
   }
 
   updateProject(project: ExistingProject) {
@@ -40,7 +45,7 @@ export class ProjectService {
     projectId: number
   ) {
     const url = `${environment.apiUrl}projects_owner/${managerUsername}/${employeeUsername}/${projectId}`;
-    return this.http.patch(url);
+    return this.http.patch(url, {});
   }
 
   removeEmployeeFromProject(
@@ -54,11 +59,11 @@ export class ProjectService {
 
   getProjectByEmployeeUsername(employeeUsername: string) {
     const url = `${environment.apiUrl}projects_owner/${employeeUsername}`;
-    return this.http.get(url);
+    return this.http.get<ExistingProject>(url);
   }
 
   getProjectWorkById(id: number) {
     const url = `${environment.apiUrl}projects_owner/${id}`;
-    return this.http.get(url);
+    return this.http.get<ExistingProject>(url);
   }
 }

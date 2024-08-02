@@ -1,0 +1,53 @@
+<main>
+  <app-page-header></app-page-header>
+  <section>
+    <h1>{{ title }}</h1>
+    <p>{{ text }}</p>
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input formControlName="name" matInput placeholder="Workshop" />
+        @if (projectForm.controls['name'].hasError('required')) {
+        <mat-error>Required</mat-error>}
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Budget</mat-label>
+        <input formControlName="budget" matInput placeholder="12300" />
+        @if (projectForm.controls['budget'].hasError('required')) {
+        <mat-error>Required</mat-error>} @if
+        (projectForm.controls['budget'].hasError('pattern')) {
+        <mat-error>Should contain only numbers</mat-error>} @if
+        (projectForm.controls['budget'].hasError('min')) {
+        <mat-error>Should be at least 1</mat-error>}
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Finish day</mat-label>
+        <input formControlName="finishDay" matInput placeholder="YYYY-MM-DD" />
+        @if (projectForm.controls['finishDay'].hasError('required')) {
+        <mat-error>Required</mat-error>} @if
+        (projectForm.controls['finishDay'].hasError('futureDate')) {
+        <mat-error>Should be future date</mat-error>}
+      </mat-form-field>
+      <div class="buttons-wrapper">
+        <button
+          [class.spinner]="loading"
+          [disabled]="loading"
+          type="submit"
+          mat-flat-button
+          color="primary"
+          class="form-button"
+        >
+          {{ buttonText }}
+        </button>
+        <button
+          mat-stroked-button
+          (click)="navigateBack($event)"
+          class="form-button"
+        >
+          Cancel
+        </button>
+      </div>
+      <p class="error">{{ error }}</p>
+    </form>
+  </section>
+</main>

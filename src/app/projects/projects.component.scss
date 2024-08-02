@@ -5,33 +5,41 @@
     background-color: rgb(244, 244, 244);
     min-height: 100vh;
   }
+
   section {
     padding: 2rem 5vw;
-    max-width: 600px;
-    margin: 0 auto;
   }
 
-  p {
-    margin-bottom: 2rem;
+  button {
+    margin-bottom: 1rem;
   }
 
-  .form-button {
-    padding-inline: 32px;
-    width: fit-content;
+  .mat-elevation-z8 {
+    box-shadow: none;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  i {
+    margin-right: 8px;
+    cursor: pointer;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
 
   .wrapper {
     padding: 2rem;
     background-color: white;
     border-radius: 4px;
-    margin-bottom: 2rem;
+    margin: 2rem auto;
+    max-width: 600px;
 
     &:last-of-type {
       margin-bottom: 0;
     }
-  }
-
-  .no-margin {
-    margin-bottom: 0;
   }
 }

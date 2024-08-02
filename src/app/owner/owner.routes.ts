@@ -6,6 +6,9 @@ import { UserFormComponent } from '../user-form/user-form.component';
 import { Mode } from '../core/models/mode.model';
 import { UserResolver } from '../core/resolvers/user.resolver';
 import { ManagementComponent } from '../management/management.component';
+import { ProjectsComponent } from '../projects/projects.component';
+import { ProjectFormComponent } from '../project-form/project-form.component';
+import { ProjectResolver } from '../core/resolvers/project.resolver';
 
 export const OWNER_ROUTE: Route[] = [
   {
@@ -24,7 +27,7 @@ export const OWNER_ROUTE: Route[] = [
     },
   },
   {
-    path: 'users/edit/:username',
+    path: 'users/:username/edit',
     resolve: { user: UserResolver },
     component: UserFormComponent,
     data: {
@@ -34,6 +37,25 @@ export const OWNER_ROUTE: Route[] = [
   {
     path: 'management',
     component: ManagementComponent,
+  },
+  {
+    path: 'projects',
+    component: ProjectsComponent,
+  },
+  {
+    path: 'projects/create',
+    component: ProjectFormComponent,
+    data: {
+      mode: Mode.Insert,
+    },
+  },
+  {
+    path: 'projects/:projectId/edit',
+    component: ProjectFormComponent,
+    resolve: { project: ProjectResolver },
+    data: {
+      mode: Mode.Edit,
+    },
   },
   { path: '**', component: Page404Component },
 ];

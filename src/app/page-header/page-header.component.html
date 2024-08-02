@@ -6,9 +6,8 @@
   <ul class="nav-links">
     <a (click)="navigateToUsers()">Users</a>
     <a (click)="navigateToAnnualLeave()">Annual leaves</a>
-    @if (canSeeProjects()) {
     <a (click)="navigateToProjects()">Projects</a>
-    } @if (canSeeManagement()) {
+    @if (canSeeManagement()) {
     <a (click)="navigateToManagement()">Management</a>
     }
   </ul>
