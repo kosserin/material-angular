@@ -3,11 +3,14 @@
   @if (!error && role !== Role.Employee) {
   <section>
     <h1>Project Management</h1>
+    @if (role === Role.Owner) {
     <p class="max-w-600">
       View and manage the list of all projects. Click "Add Project" to create a
       new entry. You can also update or delete existing projects as needed.
     </p>
-    @if (role === Role.Owner) {
+    } @if (role === Role.Manager) {
+    <p class="max-w-600">Add or remove developers from projects.</p>
+    } @if (role === Role.Owner) {
     <button
       class="basic-button"
       color="primary"
@@ -16,6 +19,8 @@
     >
       Add project
     </button>
+
+    <!-- PROJECTS TABLE -->
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="project_id">
@@ -62,6 +67,9 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </div>
+    <!-- END OF PROJECTS TABLE -->
+
+    <!-- SEARCH FOR PROJECT WORK -->
     <div class="wrapper">
       <h2>Search for project work</h2>
       <form [formGroup]="searchProjectForm" (ngSubmit)="searchForProject()">
@@ -80,7 +88,7 @@
           type="submit"
           mat-flat-button
         >
-          Search
+          Submit
         </button>
       </form>
       @if (projectFromSearchedProjectWork) {
@@ -90,6 +98,9 @@
       }
     </div>
     }
+    <!-- END OF SEARCH FOR PROJECT WORK -->
+
+    <!-- ADD DEVELOPER -->
     <div class="wrapper">
       <h2>Add developer to project</h2>
       <form [formGroup]="addDeveloperForm" (ngSubmit)="addDeveloperToProject()">
@@ -123,6 +134,9 @@
         </button>
       </form>
     </div>
+    <!-- END OF ADD DEVELOPER -->
+
+    <!-- REMOVE DEVELOPER -->
     <div class="wrapper">
       <h2>Remove developer from project</h2>
       <form
@@ -160,6 +174,7 @@
         </button>
       </form>
     </div>
+    <!-- END OF REMOVE DEVELOPER -->
   </section>
   }
 </main>

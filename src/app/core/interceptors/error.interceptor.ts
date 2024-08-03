@@ -1,12 +1,17 @@
-import { Injectable } from "@angular/core";
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from "@angular/common/http";
-import { Observable, throwError } from "rxjs";
-import { catchError } from "rxjs/operators";
-import { AuthService } from "../../auth.service";
+import { Injectable } from '@angular/core';
+import {
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpInterceptor,
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AuthService } from '../../auth.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -15,14 +20,13 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         if (err.status === 401) {
-          alert(err.status)
           // auto logout if 401 response returned from api
           this.authService.logout();
           location.reload();
         }
 
-        const error = err.error.message || err.statusText;
-        return throwError(error);
+        const error = `${err.error.status} ${err.error.title} - ${err.error.detail}`;
+        return throwError(() => error);
       })
     );
   }

@@ -70,15 +70,11 @@ export class ManagementComponent implements OnInit {
   loadAllProjects() {
     this.managementService.getManagements().subscribe({
       next: (managements) => (this.dataSource.data = managements),
-      error: () => {
+      error: (error) => {
         this.error = true;
-        this.snackBar.open(
-          'Something went wrong while loading all managements.',
-          '',
-          {
-            duration: 2000,
-          }
-        );
+        this.snackBar.open(error, '', {
+          duration: 2000,
+        });
       },
     });
   }
@@ -94,15 +90,11 @@ export class ManagementComponent implements OnInit {
       next: (managementResponse) => {
         this.textToDisplayForSearchManagement = `Employee <b>${managementResponse.employee.username}</b> is under management of <b>${managementResponse.manager.username}</b>`;
       },
-      error: () => {
+      error: (error) => {
         this.textToDisplayForSearchManagement = '';
-        this.snackBar.open(
-          'Something went wrong while searching for management.',
-          '',
-          {
-            duration: 2000,
-          }
-        );
+        this.snackBar.open(error, '', {
+          duration: 2000,
+        });
       },
     });
   }
@@ -123,15 +115,10 @@ export class ManagementComponent implements OnInit {
             duration: 2000,
           });
         },
-        error: () => {
-          this.snackBar.open(
-            'Something went wrong while creating management.',
-            '',
-            {
-              duration: 2000,
-            }
-          );
-        },
+        error: (error) =>
+          this.snackBar.open(error, '', {
+            duration: 2000,
+          }),
       });
   }
 
@@ -151,15 +138,10 @@ export class ManagementComponent implements OnInit {
             duration: 2000,
           });
         },
-        error: () => {
-          this.snackBar.open(
-            'Something went wrong while updating management.',
-            '',
-            {
-              duration: 2000,
-            }
-          );
-        },
+        error: (error) =>
+          this.snackBar.open(error, '', {
+            duration: 2000,
+          }),
       });
   }
 }

@@ -9,7 +9,8 @@ import { PageHeaderComponent } from '../page-header/page-header.component';
 import { UserService } from '../core/services/user.service';
 import { ProjectService } from '../core/services/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ExistingProject } from '../core/models/project.model';
+import { ReportService } from '../core/services/report.service';
+import { Report } from '../core/models/report.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit {
   Role = Role;
   managerNameOfEmployee?: string;
   userProjectsNames?: string;
+  report?: Report[];
 
   constructor(
     private route: ActivatedRoute,
@@ -31,11 +33,18 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private projectService: ProjectService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private reportService: ReportService
   ) {}
 
   ngOnInit(): void {
     this.user = this.authService.currentUserValue;
+
+    this.reportService.getAllReports().subscribe({
+      next: (report) => (this.report = report),
+      error: (error) => this.snackBar.open(error, '', { duration: 2000 }),
+    });
+
     this.route.data.subscribe((data) => {
       this.role = data['role'];
 
@@ -58,11 +67,7 @@ export class DashboardComponent implements OnInit {
     this.userService.getManagerByEmployeesName(this.user.username).subscribe({
       next: (managerName) => (this.managerNameOfEmployee = managerName),
       error: (error) => {
-        let errMessage = 'Something went wrong.';
-        if (error.details) {
-          errMessage = `${error.status} ${error.title} - ${error.details}`;
-        }
-        this.snackBar.open(errMessage, '', { duration: 2000 });
+        this.snackBar.open(error, '', { duration: 2000 });
       },
     });
   }
@@ -79,13 +84,7 @@ export class DashboardComponent implements OnInit {
 
           this.userProjectsNames = onlyProjectsNames;
         },
-        error: (error) => {
-          let errMessage = 'Something went wrong.';
-          if (error.details) {
-            errMessage = `${error.status} ${error.title} - ${error.details}`;
-          }
-          this.snackBar.open(errMessage, '', { duration: 2000 });
-        },
+        error: (error) => this.snackBar.open(error, '', { duration: 2000 }),
       });
   }
 }

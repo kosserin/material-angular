@@ -134,15 +134,10 @@ export class ProjectsComponent implements OnInit {
                 }
               );
             },
-            error: () => {
-              this.snackBar.open(
-                'Something went wrong while adding employee to the project.',
-                '',
-                {
-                  duration: 2000,
-                }
-              );
-            },
+            error: (error) =>
+              this.snackBar.open(error, '', {
+                duration: 2000,
+              }),
           });
       }
     }
@@ -170,15 +165,10 @@ export class ProjectsComponent implements OnInit {
                 }
               );
             },
-            error: () => {
-              this.snackBar.open(
-                'Something went wrong while removing employee from the project.',
-                '',
-                {
-                  duration: 2000,
-                }
-              );
-            },
+            error: (error) =>
+              this.snackBar.open(error, '', {
+                duration: 2000,
+              }),
           });
       }
     }
@@ -192,15 +182,11 @@ export class ProjectsComponent implements OnInit {
           next: (project) => {
             this.projectFromSearchedProjectWork = project;
           },
-          error: () => {
+          error: (error) => {
             this.projectFromSearchedProjectWork = undefined;
-            this.snackBar.open(
-              'Something went wrong while searching for project work.',
-              '',
-              {
-                duration: 2000,
-              }
-            );
+            this.snackBar.open(error, '', {
+              duration: 2000,
+            });
           },
         });
       }

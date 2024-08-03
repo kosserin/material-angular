@@ -35,15 +35,10 @@ export class DeleteProjectDialogComponent {
   deleteProject(): void {
     this.projectService.deleteProject(this.data.projectId).subscribe({
       next: () => this.dialogRef.close(),
-      error: () => {
-        this.snackBar.open(
-          'Something went wrong when deleting project.',
-          '',
-          {
-            duration: 2000,
-          }
-        );
-      },
+      error: (error) =>
+        this.snackBar.open(error, '', {
+          duration: 2000,
+        }),
     });
   }
 }

@@ -1,15 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { Report } from '../models/report.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ReportsService {
+export class ReportService {
   constructor(private http: HttpClient) {}
 
   getAllReports() {
-    const url = `${environment.apiUrl}reports`;
-    return this.http.get(url);
+    const url = `${environment.reportUrl}reports`;
+    return this.http.get<Report[]>(url);
   }
 }

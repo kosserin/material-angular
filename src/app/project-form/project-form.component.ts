@@ -111,15 +111,10 @@ export class ProjectFormComponent implements OnInit {
               this.location.back();
             }, 2000);
           },
-          error: () => {
-            this.snackBar.open(
-              'Something went wrong with adding project.',
-              '',
-              {
-                duration: 2000,
-              }
-            );
-          },
+          error: (error) =>
+            this.snackBar.open(error, '', {
+              duration: 2000,
+            }),
         });
       }
 
@@ -135,15 +130,10 @@ export class ProjectFormComponent implements OnInit {
                 this.location.back();
               }, 2000);
             },
-            error: () => {
-              this.snackBar.open(
-                'Something went wrong with updating project.',
-                '',
-                {
-                  duration: 2000,
-                }
-              );
-            },
+            error: (error) =>
+              this.snackBar.open(error, '', {
+                duration: 2000,
+              }),
           });
       }
     }

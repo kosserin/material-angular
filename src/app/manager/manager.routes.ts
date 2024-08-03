@@ -6,6 +6,8 @@ import { ManagementComponent } from '../management/management.component';
 import { Mode } from '../core/models/mode.model';
 import { UserResolver } from '../core/resolvers/user.resolver';
 import { UserFormComponent } from '../user-form/user-form.component';
+import { AnnualLeaveComponent } from '../annual-leave/annual-leave.component';
+import { ProjectsComponent } from '../projects/projects.component';
 export const MANAGER_ROUTE: Route[] = [
   {
     path: 'dashboard',
@@ -33,6 +35,14 @@ export const MANAGER_ROUTE: Route[] = [
     data: {
       mode: Mode.Edit,
     },
+  },
+  {
+    path: 'annual-leave',
+    component: AnnualLeaveComponent,
+  },
+  {
+    path: 'projects',
+    component: ProjectsComponent,
   },
   { path: '**', component: Page404Component },
 ];

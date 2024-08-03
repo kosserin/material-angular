@@ -10,6 +10,7 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { delay, finalize } from 'rxjs';
 import { Role } from '../core/models/role';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -36,12 +37,16 @@ export class LoginComponent {
   loading = false;
   error?: string;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   clickEvent(event: MouseEvent) {
     this.hide.set(!this.hide());
     event.stopPropagation();
-    event.preventDefault()
+    event.preventDefault();
   }
 
   onSubmit() {
@@ -77,9 +82,7 @@ export class LoginComponent {
               this.router.navigate(['/employee/dashboard']);
             }
           },
-          error: () => {
-            this.error = 'Something went wrong. Please try again.';
-          },
+          error: (error) => this.snackBar.open(error, '', { duration: 2000 }),
         });
     }
   }

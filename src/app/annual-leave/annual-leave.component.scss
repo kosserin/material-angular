@@ -24,23 +24,24 @@
     width: 100%;
   }
 
+  .wrapper {
+    padding: 2rem;
+    background-color: white;
+    border-radius: 4px;
+    margin: 2rem auto;
+    max-width: 600px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
   i {
     margin-right: 8px;
     cursor: pointer;
 
     &:last-of-type {
       margin-right: 0;
-    }
-  }
-
-  .wrapper {
-    padding: 2rem;
-    background-color: white;
-    border-radius: 4px;
-    margin: 2rem 0;
-
-    &:last-of-type {
-      margin-bottom: 0;
     }
   }
 }

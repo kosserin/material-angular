@@ -9,6 +9,7 @@ import { ManagementComponent } from '../management/management.component';
 import { ProjectsComponent } from '../projects/projects.component';
 import { ProjectFormComponent } from '../project-form/project-form.component';
 import { ProjectResolver } from '../core/resolvers/project.resolver';
+import { AnnualLeaveComponent } from '../annual-leave/annual-leave.component';
 
 export const OWNER_ROUTE: Route[] = [
   {
@@ -33,6 +34,10 @@ export const OWNER_ROUTE: Route[] = [
     data: {
       mode: Mode.Edit,
     },
+  },
+  {
+    path: 'annual-leave',
+    component: AnnualLeaveComponent,
   },
   {
     path: 'management',
