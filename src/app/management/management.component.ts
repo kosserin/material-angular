@@ -10,6 +10,10 @@ import {
 } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ManagementResponse } from '../core/models/management.model';
+import { Role } from '../core/models/role';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-management',
@@ -19,6 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
+    MatTableModule,
   ],
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss',
@@ -28,14 +33,27 @@ export class ManagementComponent implements OnInit {
   assignForm!: FormGroup;
   updateForm!: FormGroup;
   textToDisplayForSearchManagement = '';
+  displayedColumns: string[] = ['id', 'employeeUsername', 'managerUsername'];
+  dataSource = new MatTableDataSource<ManagementResponse>([]);
+  error = false;
+  role!: Role;
+  Role = Role;
 
   constructor(
+    private route: ActivatedRoute,
     private fb: NonNullableFormBuilder,
     private snackBar: MatSnackBar,
     private managementService: ManagementService
   ) {}
 
   ngOnInit(): void {
+    this.route.data.subscribe((data) => {
+      this.role = data['role'];
+      if (this.role === Role.Owner) {
+        this.loadAllProjects();
+      }
+    });
+
     this.searchForm = this.fb.group({
       managementId: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
     });
@@ -46,6 +64,22 @@ export class ManagementComponent implements OnInit {
     this.updateForm = this.fb.group({
       managerUsername: ['', [Validators.required, Validators.minLength(2)]],
       employeeUsername: ['', [Validators.required, Validators.minLength(2)]],
+    });
+  }
+
+  loadAllProjects() {
+    this.managementService.getManagements().subscribe({
+      next: (managements) => (this.dataSource.data = managements),
+      error: () => {
+        this.error = true;
+        this.snackBar.open(
+          'Something went wrong while loading all managements.',
+          '',
+          {
+            duration: 2000,
+          }
+        );
+      },
     });
   }
 
@@ -113,7 +147,7 @@ export class ManagementComponent implements OnInit {
       .updateManagerForEmployee(managerUsername, employeeUsername)
       .subscribe({
         next: () => {
-          this.snackBar.open('You successfully created management.', '', {
+          this.snackBar.open('You successfully updated management.', '', {
             duration: 2000,
           });
         },

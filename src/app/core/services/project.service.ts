@@ -57,9 +57,9 @@ export class ProjectService {
     return this.http.delete(url);
   }
 
-  getProjectByEmployeeUsername(employeeUsername: string) {
-    const url = `${environment.apiUrl}projects_owner/${employeeUsername}`;
-    return this.http.get<ExistingProject>(url);
+  getProjectsByEmployeeUsername(employeeUsername: string) {
+    const url = `${environment.apiUrl}developer/project/${employeeUsername}`;
+    return this.http.get<ExistingProject[]>(url);
   }
 
   getProjectWorkById(id: number) {

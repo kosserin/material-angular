@@ -162,16 +162,4 @@
     </div>
   </section>
   }
-
-  @if (role === Role.Employee) {
-    <section>
-      <h1>Projects</h1>
-      <p class="max-w-600">On this page you can see what project you work on.</p>
-      @if (projectFromSearchedProjectWork) {
-        <h2>Name: {{ projectFromSearchedProjectWork.name }}</h2>
-        <h3>Budget: {{ projectFromSearchedProjectWork.budget }}</h3>
-        <h3>Finish day: {{ projectFromSearchedProjectWork.finishDay }}</h3>
-        }
-    </section>
-  }
 </main>

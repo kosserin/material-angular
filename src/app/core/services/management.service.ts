@@ -9,6 +9,12 @@ import { ManagementResponse } from '../models/management.model';
 export class ManagementService {
   constructor(private http: HttpClient) {}
 
+  // owner only
+  getManagements() {
+    const url = `${environment.apiUrl}management`;
+    return this.http.get<ManagementResponse[]>(url);
+  }
+
   getManagementById(id: string) {
     const url = `${environment.apiUrl}management/${id}`;
     return this.http.get<ManagementResponse>(url);

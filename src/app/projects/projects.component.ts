@@ -3,14 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Role } from '../core/models/role';
 import { ProjectService } from '../core/services/project.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import {
-  ExistingProject,
-  ProjectAndManagementUserResponse,
-} from '../core/models/project.model';
+import { ExistingProject } from '../core/models/project.model';
 import { PageHeaderComponent } from '../page-header/page-header.component';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteProjectDialogComponent } from '../delete-project-dialog/delete-project-dialog.component';
 import {
@@ -30,9 +25,7 @@ import { AuthService } from '../auth.service';
   imports: [
     PageHeaderComponent,
     MatTableModule,
-    MatPaginatorModule,
     MatButtonModule,
-    MatSortModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -87,33 +80,10 @@ export class ProjectsComponent implements OnInit {
     this.route.data.subscribe((data) => {
       this.role = data['role'];
 
-      if (this.role === Role.Employee) {
-        this.loadProject();
-      }
-
       if (this.role === Role.Owner) {
         this.loadAllProjects();
       }
     });
-  }
-
-  loadProject() {
-    this.projectService
-      .getProjectByEmployeeUsername(this.authService.currentUserValue.username)
-      .subscribe({
-        next: (project) => {
-          this.projectFromSearchedProjectWork = project;
-        },
-        error: () => {
-          this.snackBar.open(
-            'Something went wrong while fetching project',
-            '',
-            {
-              duration: 2000,
-            }
-          );
-        },
-      });
   }
 
   loadAllProjects() {

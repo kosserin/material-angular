@@ -6,8 +6,8 @@
 
   .content {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
+    flex-direction: column;
   }
 
   .image-wrapper,
@@ -16,13 +16,28 @@
   }
 
   img {
-    width: 100%;
     display: block;
-    min-width: 300px;
+    width: 100%;
   }
 
   section {
     padding: 2rem 5vw;
     min-width: 300px;
+  }
+
+  .image-wrapper {
+    order: 2;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  :host {
+    .content {
+      flex-direction: row;
+    }
+
+    section {
+      order: 2;
+    }
   }
 }

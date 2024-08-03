@@ -2,5 +2,16 @@
   <app-page-header></app-page-header>
   <section>
     <h1>Welcome back, {{ user.firstname }} 👋</h1>
+
+    @if (role === Role.Employee && managerNameOfEmployee) {
+    <h3>
+      Your manager is: <b>{{ managerNameOfEmployee }}</b>
+    </h3>
+    } @if (role === Role.Employee && userProjectsNames) {
+    <h3>
+      You work on:
+      <b>{{ userProjectsNames }}</b>
+    </h3>
+    }
   </section>
 </main>

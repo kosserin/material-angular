@@ -8,31 +8,7 @@
       and click "Assign Manager" to set up new management relationships.
     </p>
 
-    <div class="wrapper">
-      <h2>Search for management</h2>
-      <form [formGroup]="searchForm" (ngSubmit)="searchForManagement()">
-        <mat-form-field appearance="outline">
-          <mat-label>Management id</mat-label>
-          <input formControlName="managementId" matInput placeholder="e.g 12" />
-          @if (searchForm.controls['managementId'].hasError('required')) {
-          <mat-error>Required</mat-error>} @if
-          (searchForm.controls['managementId'].hasError('pattern')) {
-          <mat-error>Should contain only numbers</mat-error>}
-        </mat-form-field>
-        <button
-          class="form-button"
-          color="primary"
-          type="submit"
-          mat-flat-button
-        >
-          Search
-        </button>
-        @if (textToDisplayForSearchManagement) {
-        <p class="no-margin" [innerHTML]="textToDisplayForSearchManagement"></p>
-        }
-      </form>
-    </div>
-
+    <!-- ASSIGN -->
     <div class="wrapper">
       <h2>Assign manager to employee</h2>
       <form [formGroup]="assignForm" (ngSubmit)="createManagement()">
@@ -70,10 +46,12 @@
         </button>
       </form>
     </div>
+    <!-- END OF ASSIGN -->
 
+    <!-- UPDATE -->
     <div class="wrapper">
       <h2>Update manager of an employee</h2>
-      <form [formGroup]="updateForm" (ngSubmit)="createManagement()">
+      <form [formGroup]="updateForm" (ngSubmit)="updateManagement()">
         <mat-form-field appearance="outline">
           <mat-label>Manager username</mat-label>
           <input
@@ -108,5 +86,62 @@
         </button>
       </form>
     </div>
+    <!-- END OF UPDATE -->
+
+    <!-- SEARCH -->
+
+    <div class="wrapper">
+      <h2>Search for management</h2>
+      <form [formGroup]="searchForm" (ngSubmit)="searchForManagement()">
+        <mat-form-field appearance="outline">
+          <mat-label>Management id</mat-label>
+          <input formControlName="managementId" matInput placeholder="e.g 12" />
+          @if (searchForm.controls['managementId'].hasError('required')) {
+          <mat-error>Required</mat-error>} @if
+          (searchForm.controls['managementId'].hasError('pattern')) {
+          <mat-error>Should contain only numbers</mat-error>}
+        </mat-form-field>
+        <button
+          class="form-button"
+          color="primary"
+          type="submit"
+          mat-flat-button
+        >
+          Search
+        </button>
+        @if (textToDisplayForSearchManagement) {
+        <p class="no-margin" [innerHTML]="textToDisplayForSearchManagement"></p>
+        }
+      </form>
+    </div>
+    <!-- END OF SEARCH -->
+
+    @if (!error) {
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>Management id</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="employeeUsername">
+          <th mat-header-cell *matHeaderCellDef>Employee username</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.employee.username }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="managerUsername">
+          <th mat-header-cell *matHeaderCellDef>Manager username</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.manager.username }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    }
   </section>
 </main>

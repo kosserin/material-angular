@@ -16,6 +16,7 @@ import { MatIcon } from '@angular/material/icon';
 export class PageHeaderComponent {
   role!: Role;
   user!: User;
+  Role = Role;
 
   constructor(
     private route: ActivatedRoute,

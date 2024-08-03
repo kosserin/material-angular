@@ -57,6 +57,6 @@ export class UserService {
   getManagerByEmployeesName(employeeUsername: string) {
     const url = `${environment.apiUrl}developer/manager/${employeeUsername}`;
 
-    return this.http.get<string>(url);
+    return this.http.get<string>(url, { responseType: 'text' as 'json' });
   }
 }

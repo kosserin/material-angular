@@ -17,11 +17,16 @@
     .left {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 12px;
       cursor: pointer;
+
+      img {
+        display: block;
+      }
 
       h2 {
         margin: 0;
+        transform: translateY(-4px);
       }
     }
   }
