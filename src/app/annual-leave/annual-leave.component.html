@@ -98,7 +98,6 @@
 
     <!-- TABLE OF ANNUAL LEAVES -->
     @if (role !== Role.Employee && !error && toApproveDataSource.data.length) {
-    <h3 style="margin-top: 2rem">Annual leaves waiting for your approval</h3>
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="toApproveDataSource">
         <ng-container matColumnDef="id">
@@ -130,6 +129,7 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let element">
+            @if (element.verified) { Verified! } @else {
             <i
               class="material-icons"
               role="button"
@@ -142,6 +142,8 @@
               (click)="rejectAnnualLeave(element.employee.username)"
               >close</i
             >
+
+            }
           </td>
         </ng-container>
 
