@@ -1,11 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import {
-  ExistingProject,
-  GetProjectWorkResponse,
-  NewProject,
-} from '../models/project.model';
+import { ExistingProject, NewProject } from '../models/project.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -39,21 +35,13 @@ export class ProjectService {
     return this.http.delete(url);
   }
 
-  addEmployeeToProject(
-    managerUsername: string,
-    employeeUsername: string,
-    projectId: number
-  ) {
-    const url = `${environment.apiUrl}projects_owner/${managerUsername}/${employeeUsername}/${projectId}`;
+  addEmployeeToProject(employeeUsername: string, projectId: number) {
+    const url = `${environment.apiUrl}project_management/${employeeUsername}/${projectId}`;
     return this.http.patch(url, {});
   }
 
-  removeEmployeeFromProject(
-    managerUsername: string,
-    employeeUsername: string,
-    projectId: number
-  ) {
-    const url = `${environment.apiUrl}projects_owner/${managerUsername}/${employeeUsername}/${projectId}`;
+  removeEmployeeFromProject(employeeUsername: string, projectId: number) {
+    const url = `${environment.apiUrl}project_management/${employeeUsername}/${projectId}`;
     return this.http.delete(url);
   }
 

@@ -29,4 +29,9 @@ export class ManagementService {
     const url = `${environment.apiUrl}management/${managerUsername}/${employeeUsername}`;
     return this.http.post(url, {});
   }
+
+  getAllManagementsForManager(managerUsername: string) {
+    const url = `${environment.apiUrl}project_management/managerinfo/${managerUsername}`;
+    return this.http.get<ManagementResponse[]>(url);
+  }
 }

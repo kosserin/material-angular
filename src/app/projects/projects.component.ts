@@ -17,7 +17,10 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ManagementService } from '../core/services/management.service';
 import { AuthService } from '../auth.service';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-projects',
@@ -29,6 +32,8 @@ import { AuthService } from '../auth.service';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
   ],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss',
@@ -47,33 +52,35 @@ export class ProjectsComponent implements OnInit {
   Role = Role;
   addDeveloperForm = new FormGroup({
     employeeUsername: new FormControl('', [Validators.required]),
-    projectWorkId: new FormControl('', [
+    projectId: new FormControl('', [
       Validators.required,
       Validators.pattern('^[0-9]*$'),
     ]),
   });
   removeDeveloperForm = new FormGroup({
     employeeUsername: new FormControl('', [Validators.required]),
-    projectWorkId: new FormControl('', [
+    projectId: new FormControl('', [
       Validators.required,
       Validators.pattern('^[0-9]*$'),
     ]),
   });
   projectFromSearchedProjectWork?: ExistingProject;
   searchProjectForm = new FormGroup({
-    projectWorkId: new FormControl('', [
+    projectId: new FormControl('', [
       Validators.required,
       Validators.pattern('^[0-9]*$'),
     ]),
   });
+  managedEmployeeUsernames: string[] = [];
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
-    private projectService: ProjectService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private authService: AuthService
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private projectService: ProjectService,
+    private managementService: ManagementService
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +90,10 @@ export class ProjectsComponent implements OnInit {
       if (this.role === Role.Owner) {
         this.loadAllProjects();
       }
+
+      if (this.role === Role.Manager) {
+        this.getAllManagementsForManager();
+      }
     });
   }
 
@@ -91,6 +102,18 @@ export class ProjectsComponent implements OnInit {
       next: (projects) => (this.dataSource.data = projects),
       error: () => (this.error = true),
     });
+  }
+
+  getAllManagementsForManager() {
+    this.managementService
+      .getAllManagementsForManager(this.authService.currentUserValue.username)
+      .subscribe({
+        next: (managements) => {
+          const employeeUsernames = managements.map((m) => m.employee.username);
+          this.managedEmployeeUsernames = employeeUsernames;
+        },
+        error: () => (this.managedEmployeeUsernames = []),
+      });
   }
 
   navigateToCreateProject() {
@@ -114,16 +137,12 @@ export class ProjectsComponent implements OnInit {
 
   addDeveloperToProject() {
     if (this.addDeveloperForm.valid) {
-      const { projectWorkId, employeeUsername } =
+      const { projectId, employeeUsername } =
         this.addDeveloperForm.getRawValue();
 
-      if (projectWorkId !== null && employeeUsername !== null) {
+      if (projectId !== null && employeeUsername !== null) {
         this.projectService
-          .addEmployeeToProject(
-            this.authService.currentUserValue.username,
-            employeeUsername,
-            +projectWorkId
-          )
+          .addEmployeeToProject(employeeUsername, +projectId)
           .subscribe({
             next: () => {
               this.snackBar.open(
@@ -145,16 +164,12 @@ export class ProjectsComponent implements OnInit {
 
   removeDeveloperFromProject() {
     if (this.removeDeveloperForm.valid) {
-      const { projectWorkId, employeeUsername } =
+      const { projectId, employeeUsername } =
         this.removeDeveloperForm.getRawValue();
 
-      if (projectWorkId !== null && employeeUsername !== null) {
+      if (projectId !== null && employeeUsername !== null) {
         this.projectService
-          .removeEmployeeFromProject(
-            this.authService.currentUserValue.username,
-            employeeUsername,
-            +projectWorkId
-          )
+          .removeEmployeeFromProject(employeeUsername, +projectId)
           .subscribe({
             next: () => {
               this.snackBar.open(
@@ -175,10 +190,10 @@ export class ProjectsComponent implements OnInit {
   }
   searchForProject() {
     if (this.searchProjectForm.valid) {
-      const { projectWorkId } = this.searchProjectForm.getRawValue();
+      const { projectId } = this.searchProjectForm.getRawValue();
 
-      if (projectWorkId !== null) {
-        this.projectService.getProjectWorkById(+projectWorkId).subscribe({
+      if (projectId !== null) {
+        this.projectService.getProjectWorkById(+projectId).subscribe({
           next: (project) => {
             this.projectFromSearchedProjectWork = project;
           },

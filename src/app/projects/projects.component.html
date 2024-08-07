@@ -69,17 +69,16 @@
     </div>
     <!-- END OF PROJECTS TABLE -->
 
-    <!-- SEARCH FOR PROJECT WORK -->
+    <!-- SEARCH FOR PROJECT -->
     <div class="wrapper">
-      <h2>Search for project work</h2>
+      <h2>Search for project</h2>
       <form [formGroup]="searchProjectForm" (ngSubmit)="searchForProject()">
         <mat-form-field appearance="outline">
-          <mat-label>Project work id</mat-label>
-          <input formControlName="projectWorkId" matInput placeholder="e.g 1" />
-          @if (searchProjectForm.controls['projectWorkId'].hasError('required'))
-          {
+          <mat-label>Project id</mat-label>
+          <input formControlName="projectId" matInput placeholder="e.g 1" />
+          @if (searchProjectForm.controls['projectId'].hasError('required')) {
           <mat-error>Required</mat-error>} @if
-          (searchProjectForm.controls['projectWorkId'].hasError('pattern')) {
+          (searchProjectForm.controls['projectId'].hasError('pattern')) {
           <mat-error>Should contain only numbers</mat-error>}
         </mat-form-field>
         <button
@@ -97,31 +96,30 @@
       <h3>Finish day: {{ projectFromSearchedProjectWork.finishDay }}</h3>
       }
     </div>
-    }
-    <!-- END OF SEARCH FOR PROJECT WORK -->
-
+    } @if (managedEmployeeUsernames.length) {
     <!-- ADD DEVELOPER -->
     <div class="wrapper">
       <h2>Add developer to project</h2>
       <form [formGroup]="addDeveloperForm" (ngSubmit)="addDeveloperToProject()">
         <mat-form-field appearance="outline">
           <mat-label>Employee username</mat-label>
-          <input
-            formControlName="employeeUsername"
-            matInput
-            placeholder="e.g johndev"
-          />
+          <mat-select formControlName="employeeUsername">
+            <mat-option>--</mat-option>
+            @for (username of managedEmployeeUsernames; track username) {
+            <mat-option [value]="username">{{ username }}</mat-option>
+            }
+          </mat-select>
           @if
           (addDeveloperForm.controls['employeeUsername'].hasError('required')) {
-          <mat-error>Required</mat-error>}
+          <mat-error>Please choose an employee</mat-error>
+          }
         </mat-form-field>
         <mat-form-field appearance="outline">
-          <mat-label>Project work id</mat-label>
-          <input formControlName="projectWorkId" matInput placeholder="e.g 1" />
-          @if (addDeveloperForm.controls['projectWorkId'].hasError('required'))
-          {
+          <mat-label>Project id</mat-label>
+          <input formControlName="projectId" matInput placeholder="e.g 1" />
+          @if (addDeveloperForm.controls['projectId'].hasError('required')) {
           <mat-error>Required</mat-error>} @if
-          (addDeveloperForm.controls['projectWorkId'].hasError('pattern')) {
+          (addDeveloperForm.controls['projectId'].hasError('pattern')) {
           <mat-error>Should contain only numbers</mat-error>}
         </mat-form-field>
         <button
@@ -143,25 +141,25 @@
         [formGroup]="removeDeveloperForm"
         (ngSubmit)="removeDeveloperFromProject()"
       >
+      <mat-form-field appearance="outline">
+        <mat-label>Employee username</mat-label>
+        <mat-select formControlName="employeeUsername">
+          <mat-option>--</mat-option>
+          @for (username of managedEmployeeUsernames; track username) {
+          <mat-option [value]="username">{{ username }}</mat-option>
+          }
+        </mat-select>
+        @if
+        (removeDeveloperForm.controls['employeeUsername'].hasError('required')) {
+        <mat-error>Please choose an employee</mat-error>
+        }
+      </mat-form-field>
         <mat-form-field appearance="outline">
-          <mat-label>Employee username</mat-label>
-          <input
-            formControlName="employeeUsername"
-            matInput
-            placeholder="e.g johndev"
-          />
-          @if
-          (removeDeveloperForm.controls['employeeUsername'].hasError('required'))
-          {
-          <mat-error>Required</mat-error>}
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Project work id</mat-label>
-          <input formControlName="projectWorkId" matInput placeholder="e.g 1" />
-          @if
-          (removeDeveloperForm.controls['projectWorkId'].hasError('required')) {
+          <mat-label>Project id</mat-label>
+          <input formControlName="projectId" matInput placeholder="e.g 1" />
+          @if (removeDeveloperForm.controls['projectId'].hasError('required')) {
           <mat-error>Required</mat-error>} @if
-          (removeDeveloperForm.controls['projectWorkId'].hasError('pattern')) {
+          (removeDeveloperForm.controls['projectId'].hasError('pattern')) {
           <mat-error>Should contain only numbers</mat-error>}
         </mat-form-field>
         <button
@@ -175,6 +173,8 @@
       </form>
     </div>
     <!-- END OF REMOVE DEVELOPER -->
+    }
+    <!-- END OF SEARCH FOR PROJECT -->
   </section>
   }
 </main>

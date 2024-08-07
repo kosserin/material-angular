@@ -17,18 +17,18 @@ export class AnnualLeaveService {
     return this.http.get(url);
   }
 
-  rejectAnnualLeave(managerUsername: string, employeeUsername: string) {
-    const url = `${environment.apiUrl}annual_leave_manager/${managerUsername}/${employeeUsername}`;
+  rejectAnnualLeave(employeeUsername: string) {
+    const url = `${environment.apiUrl}annual_leave_manager/${employeeUsername}`;
     return this.http.patch(url, {});
   }
 
-  approveAnnualLeave(managerUsername: string, employeeUsername: string) {
-    const url = `${environment.apiUrl}annual_leave_manager/${managerUsername}/${employeeUsername}`;
+  approveAnnualLeave(employeeUsername: string) {
+    const url = `${environment.apiUrl}annual_leave_manager/${employeeUsername}`;
     return this.http.post(url, {});
   }
 
-  getDaysLeft(employeeUsername: string) {
-    const url = `${environment.apiUrl}annual_leave_developer/daysLeft/${employeeUsername}`;
+  getDaysLeft() {
+    const url = `${environment.apiUrl}annual_leave_developer/daysLeft`;
     return this.http.get<number>(url, { responseType: 'text' as 'json' });
   }
 
@@ -45,7 +45,7 @@ export class AnnualLeaveService {
     );
   }
 
-  // Menager and employee
+  // Manager and employee
   getAllAnnualLeaves() {
     const url = `${environment.apiUrl}annual_leave_manager`;
     return this.http.get<AnnualLeaveByUsernameResponse[]>(url);

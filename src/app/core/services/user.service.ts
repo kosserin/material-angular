@@ -29,14 +29,7 @@ export class UserService {
   }
 
   createUser(formData: UserItem, role: Role) {
-    let url = '';
-    if (role === Role.Manager) {
-      url = `${environment.apiUrl}users`;
-    }
-
-    if (role === Role.Owner) {
-      url = `${environment.apiUrl}owner`;
-    }
+    const url = `${environment.apiUrl}users`;
 
     return this.http.post<UserItem>(url, formData);
   }

@@ -137,7 +137,6 @@ export class AnnualLeaveComponent implements OnInit {
   requestAnnualLeave() {
     if (this.requestAnnualLeaveForm.valid) {
       const request: AnnualLeaveRequest = {
-        employeeUsername: this.user.username,
         start: this.requestAnnualLeaveForm
           .getRawValue()
           .start!.format('YYYY-MM-DD'),
@@ -161,7 +160,7 @@ export class AnnualLeaveComponent implements OnInit {
   }
 
   getDaysLeft() {
-    this.annualLeaveService.getDaysLeft(this.user.username).subscribe({
+    this.annualLeaveService.getDaysLeft().subscribe({
       next: (daysLeft) => {
         this.daysLeftOfAnnualLeave = daysLeft;
       },
@@ -185,24 +184,20 @@ export class AnnualLeaveComponent implements OnInit {
   }
 
   approveAnnualLeave(employeeUsername: string) {
-    this.annualLeaveService
-      .approveAnnualLeave(this.user.username, employeeUsername)
-      .subscribe({
-        next: () => this.getAllAnnualLeaves(),
-        error: (error) => {
-          this.snackBar.open(error, '', { duration: 2000 });
-        },
-      });
+    this.annualLeaveService.approveAnnualLeave(employeeUsername).subscribe({
+      next: () => this.getAllAnnualLeaves(),
+      error: (error) => {
+        this.snackBar.open(error, '', { duration: 2000 });
+      },
+    });
   }
 
   rejectAnnualLeave(employeeUsername: string) {
-    this.annualLeaveService
-      .rejectAnnualLeave(this.user.username, employeeUsername)
-      .subscribe({
-        next: () => this.getAllAnnualLeaves(),
-        error: (error) => {
-          this.snackBar.open(error, '', { duration: 2000 });
-        },
-      });
+    this.annualLeaveService.rejectAnnualLeave(employeeUsername).subscribe({
+      next: () => this.getAllAnnualLeaves(),
+      error: (error) => {
+        this.snackBar.open(error, '', { duration: 2000 });
+      },
+    });
   }
 }
