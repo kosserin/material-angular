@@ -15,6 +15,7 @@ import {
   CanvasJS,
   CanvasJSAngularChartsModule,
 } from '@canvasjs/angular-charts';
+import { WebSocketService } from '../core/services/web-socket.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -91,10 +92,16 @@ export class DashboardComponent implements OnInit {
     private userService: UserService,
     private projectService: ProjectService,
     private snackBar: MatSnackBar,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private webSocketService: WebSocketService
   ) {}
 
   ngOnInit(): void {
+    this.webSocketService.getMessages().subscribe({
+      next: (message) => {
+        console.log(message);
+      },
+    });
     this.user = this.authService.currentUserValue;
 
     this.route.data.subscribe((data) => {
@@ -117,7 +124,6 @@ export class DashboardComponent implements OnInit {
         const entityTypes = reports.map((report) => report.entityType);
         const uniqueEntityTypes = [...new Set(entityTypes)];
         this.reportEntityTypes = uniqueEntityTypes;
-        console.log(uniqueEntityTypes);
 
         // Organize reports by entity type
         this.reportEntityTypes.forEach((entityType) => {
@@ -185,8 +191,6 @@ export class DashboardComponent implements OnInit {
     container.style.width = '100%';
 
     document.getElementById('chartsArea')?.appendChild(container);
-
-    console.log(document.getElementById(containerId));
 
     const chart = new CanvasJS.Chart(containerId, options);
     chart.render();
