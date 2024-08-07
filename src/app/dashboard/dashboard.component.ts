@@ -10,12 +10,22 @@ import { UserService } from '../core/services/user.service';
 import { ProjectService } from '../core/services/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReportService } from '../core/services/report.service';
-import { Report } from '../core/models/report.model';
+import { Report, ReportEntityType } from '../core/models/report.model';
+import {
+  CanvasJS,
+  CanvasJSAngularChartsModule,
+} from '@canvasjs/angular-charts';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatIcon, MatButtonModule, RouterModule, PageHeaderComponent],
+  imports: [
+    MatIcon,
+    MatButtonModule,
+    RouterModule,
+    PageHeaderComponent,
+    CanvasJSAngularChartsModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -25,7 +35,54 @@ export class DashboardComponent implements OnInit {
   Role = Role;
   managerNameOfEmployee?: string;
   userProjectsNames?: string;
-  report?: Report[];
+  reports?: Report[];
+  reportEntityTypes: ReportEntityType[] = [];
+  reportsByEntityType: { [key: string]: any[] } = {};
+
+  chartOptions = {
+    animationEnabled: true,
+    theme: 'light2',
+    title: {
+      text: 'HTTP',
+    },
+    axisX: {
+      minimum: 0,
+    },
+    axisY: {
+      title: 'Time (ms)',
+    },
+    toolTip: {
+      shared: true,
+    },
+    legend: {
+      cursor: 'pointer',
+      itemclick: function (e: any) {
+        if (
+          typeof e.dataSeries.visible === 'undefined' ||
+          e.dataSeries.visible
+        ) {
+          e.dataSeries.visible = false;
+        } else {
+          e.dataSeries.visible = true;
+        }
+        e.chart.render();
+      },
+    },
+    data: [
+      {
+        type: 'line',
+        showInLegend: true,
+        name: 'HTTP',
+        xValueFormatString: 'ID: ####',
+        dataPoints: [
+          {
+            x: 1,
+            y: 2,
+          },
+        ],
+      },
+    ],
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -40,19 +97,99 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.authService.currentUserValue;
 
-    this.reportService.getAllReports().subscribe({
-      next: (report) => (this.report = report),
-      error: (error) => this.snackBar.open(error, '', { duration: 2000 }),
-    });
-
     this.route.data.subscribe((data) => {
       this.role = data['role'];
+
+      if (this.role === Role.Owner) {
+        this.getAllReports();
+      }
 
       if (this.role === Role.Employee) {
         this.getManagerByEmployeesName();
         this.getProjectsByEmployeeUsername();
       }
     });
+  }
+
+  getAllReports() {
+    this.reportService.getAllReports().subscribe({
+      next: (reports) => {
+        const entityTypes = reports.map((report) => report.entityType);
+        const uniqueEntityTypes = [...new Set(entityTypes)];
+        this.reportEntityTypes = uniqueEntityTypes;
+        console.log(uniqueEntityTypes);
+
+        // Organize reports by entity type
+        this.reportEntityTypes.forEach((entityType) => {
+          this.reportsByEntityType[entityType] = reports.filter(
+            (report) => report.entityType === entityType
+          );
+        });
+
+        this.renderCharts();
+      },
+      error: (error) => this.snackBar.open(error, '', { duration: 2000 }),
+    });
+  }
+
+  renderCharts() {
+    // For each entity type, create charts for HTTP and KAFKA
+    this.reportEntityTypes.forEach((entityType) => {
+      const reports = this.reportsByEntityType[entityType];
+
+      // Filter and prepare data points for HTTP and KAFKA
+      const httpDataPoints = reports
+        .filter((report) => report.transmissionType === 'HTTP')
+        .map((report, i) => ({
+          x: i,
+          y: report.receivedTime - report.sendTime,
+        }));
+
+      const kafkaDataPoints = reports
+        .filter((report) => report.transmissionType === 'KAFKA')
+        .map((report, i) => ({
+          x: i,
+          y: report.receivedTime - report.sendTime,
+        }));
+
+      const dataOptions = {
+        ...this.chartOptions,
+        title: { text: `Transmission Times for ${entityType}` },
+        data: [
+          {
+            type: 'line',
+            showInLegend: true,
+            xValueFormatString: 'ID: ####',
+            name: 'HTTP',
+            dataPoints: httpDataPoints,
+          },
+          {
+            type: 'line',
+            showInLegend: true,
+            xValueFormatString: 'ID: ####',
+            name: 'KAFKA',
+            dataPoints: kafkaDataPoints,
+          },
+        ],
+      };
+
+      // Render the charts
+      this.createChart(`chart_${entityType}`, dataOptions);
+    });
+  }
+
+  createChart(containerId: string, options: any) {
+    const container = document.createElement('div');
+    container.id = containerId;
+    container.style.height = '370px';
+    container.style.width = '100%';
+
+    document.getElementById('chartsArea')?.appendChild(container);
+
+    console.log(document.getElementById(containerId));
+
+    const chart = new CanvasJS.Chart(containerId, options);
+    chart.render();
   }
 
   logout() {
@@ -77,8 +214,6 @@ export class DashboardComponent implements OnInit {
       .getProjectsByEmployeeUsername(this.user.username)
       .subscribe({
         next: (projects) => {
-          console.log(projects);
-
           const tmp = projects.map((project) => project.name);
           const onlyProjectsNames = tmp.join(', ');
 
