@@ -59,7 +59,7 @@
     }
     <!-- END OF REQUEST ANNUAL LEAVE -->
     <!-- TABLE OF YOUR ANNUAL LEAVES -->
-    @if (role !== Role.Employee && !error && yourDataSource.data.length) {
+    @if (role !== Role.Owner && !error && yourDataSource.data.length) {
     <h3>Your annual leaves</h3>
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="yourDataSource">

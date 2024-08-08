@@ -10,12 +10,12 @@ import { UserService } from '../core/services/user.service';
 import { ProjectService } from '../core/services/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReportService } from '../core/services/report.service';
-import { Report, ReportEntityType } from '../core/models/report.model';
+import { Report } from '../core/models/report.model';
 import {
   CanvasJS,
   CanvasJSAngularChartsModule,
 } from '@canvasjs/angular-charts';
-import { WebSocketService } from '../core/services/web-socket.service';
+import { EntityType } from '../core/models/entity-type.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit {
   managerNameOfEmployee?: string;
   userProjectsNames?: string;
   reports?: Report[];
-  reportEntityTypes: ReportEntityType[] = [];
+  reportEntityTypes: EntityType[] = [];
   reportsByEntityType: { [key: string]: any[] } = {};
 
   chartOptions = {
@@ -92,16 +92,10 @@ export class DashboardComponent implements OnInit {
     private userService: UserService,
     private projectService: ProjectService,
     private snackBar: MatSnackBar,
-    private reportService: ReportService,
-    private webSocketService: WebSocketService
+    private reportService: ReportService
   ) {}
 
   ngOnInit(): void {
-    this.webSocketService.getMessages().subscribe({
-      next: (message) => {
-        console.log(message);
-      },
-    });
     this.user = this.authService.currentUserValue;
 
     this.route.data.subscribe((data) => {

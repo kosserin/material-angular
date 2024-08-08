@@ -1,17 +1,12 @@
+import { EntityType } from "./entity-type.model";
+import { TransmissionType } from "./transmission-type.model";
+
 export interface Report {
   id: number;
-  entityType: ReportEntityType;
-  transmissionType: 'HTTP' | 'KAFKA';
+  entityType: EntityType;
+  transmissionType: TransmissionType;
   sendTime: number;
   receivedTime: number;
   objectId: string;
   payload: any;
-}
-
-export enum ReportEntityType {
-  User = 'USER',
-  Project = 'PROJECT',
-  Management = 'MANAGEMENT',
-  AnnualLeave = 'ANNUAL_LEAVE',
-  ProjectWork = 'PROJECT_WORK',
 }

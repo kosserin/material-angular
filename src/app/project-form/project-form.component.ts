@@ -20,7 +20,6 @@ import { ProjectService } from '../core/services/project.service';
 import { Location } from '@angular/common';
 import { futureDateValidator } from '../core/validators/future-date.validator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { WebSocketService } from '../core/services/web-socket.service';
 
 @Component({
   selector: 'app-project-form',
@@ -51,16 +50,10 @@ export class ProjectFormComponent implements OnInit {
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private fb: NonNullableFormBuilder,
-    private projectService: ProjectService,
-    private webSocketService: WebSocketService
+    private projectService: ProjectService
   ) {}
 
   ngOnInit(): void {
-    this.webSocketService.getMessages().subscribe({
-      next: (message) => {
-        console.log(message);
-      },
-    });
     this.route.data.subscribe((data) => {
       this.mode = data['mode'];
       this.role = data['role'];
