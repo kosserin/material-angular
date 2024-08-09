@@ -168,6 +168,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
           y: report.receivedTime - report.sendTime,
         }));
 
+      const webSocketDataPoints = reports
+        .filter((report) => report.frontendReceivedTime !== null)
+        .map((report, i) => ({
+          x: i,
+          y: report.frontendReceivedTime - report.receivedTime,
+        }));
+
       const dataOptions = {
         ...this.chartOptions,
         title: { text: `Transmission Times for ${entityType}` },
@@ -185,6 +192,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
             xValueFormatString: 'ID: ####',
             name: 'KAFKA',
             dataPoints: kafkaDataPoints,
+          },
+          {
+            type: 'line',
+            showInLegend: true,
+            xValueFormatString: 'ID: ####',
+            name: 'WebSocket',
+            dataPoints: webSocketDataPoints,
           },
         ],
       };
