@@ -6,7 +6,10 @@ import { AnnualLeaveService } from './core/services/annual-leave.service';
 import { ProjectService } from './core/services/project.service';
 import { ManagementService } from './core/services/management.service';
 import { StompService } from './core/services/stomp.service';
-import { NotificationResponse } from './core/models/notification-response.model';
+import {
+  NotificationRequest,
+  NotificationResponse,
+} from './core/models/notification-response.model';
 import { EntityType } from './core/models/entity-type.model';
 
 @Component({
@@ -30,6 +33,12 @@ export class AppComponent implements OnInit {
     this.stompService.subscribe(
       '/topic/notifications',
       (message: NotificationResponse) => {
+        const request: NotificationRequest = {
+          ...message,
+          frontendReceivedTime: Date.now(),
+        };
+        this.reportService.sendFrontendResponseTime(request).subscribe();
+
         if (message.entityType === EntityType.User) {
           this.userService.userEvent.emit();
           this.reportService.reportEvent.emit();
