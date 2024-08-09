@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Role } from '../core/models/role';
 import { ProjectService } from '../core/services/project.service';
@@ -21,6 +21,7 @@ import { ManagementService } from '../core/services/management.service';
 import { AuthService } from '../auth.service';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-projects',
@@ -38,7 +39,7 @@ import { MatSelectModule } from '@angular/material/select';
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss',
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, OnDestroy {
   error = false;
   displayedColumns: string[] = [
     'project_id',
@@ -72,6 +73,7 @@ export class ProjectsComponent implements OnInit {
     ]),
   });
   managedEmployeeUsernames: string[] = [];
+  sub = new Subscription();
 
   constructor(
     private router: Router,
@@ -84,6 +86,16 @@ export class ProjectsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.sub = this.projectService.projectEvent.subscribe(() => {
+      if (this.role === Role.Owner) {
+        this.loadAllProjects();
+      }
+
+      if (this.role === Role.Manager) {
+        this.getAllManagementsForManager();
+      }
+    });
+
     this.route.data.subscribe((data) => {
       this.role = data['role'];
 
@@ -95,6 +107,10 @@ export class ProjectsComponent implements OnInit {
         this.getAllManagementsForManager();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 
   loadAllProjects() {

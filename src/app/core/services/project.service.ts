@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ExistingProject, NewProject } from '../models/project.model';
 import { Observable } from 'rxjs';
@@ -8,6 +8,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProjectService {
+  projectEvent = new EventEmitter<void>();
+
   constructor(private http: HttpClient) {}
 
   getAllProjects() {

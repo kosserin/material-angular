@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageHeaderComponent } from '../page-header/page-header.component';
 import { Role } from '../core/models/role';
 import { AnnualLeaveService } from '../core/services/annual-leave.service';
@@ -7,7 +7,7 @@ import { User } from '../core/models/user';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
-  AnnualLeaveByUsernameResponse,
+  AnnualLeaveResponse,
   AnnualLeaveRequest,
 } from '../core/models/annual-leave.model';
 import {
@@ -17,7 +17,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { finalize } from 'rxjs';
+import { delay, finalize, Subscription } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -27,7 +27,7 @@ import {
 } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import moment, { duration } from 'moment';
+import moment from 'moment';
 
 const MY_DATE_FORMAT = {
   parse: {
@@ -63,7 +63,7 @@ const MY_DATE_FORMAT = {
   templateUrl: './annual-leave.component.html',
   styleUrl: './annual-leave.component.scss',
 })
-export class AnnualLeaveComponent implements OnInit {
+export class AnnualLeaveComponent implements OnInit, OnDestroy {
   role!: Role;
   Role = Role;
   user!: User;
@@ -75,10 +75,8 @@ export class AnnualLeaveComponent implements OnInit {
     'end',
     'actions',
   ];
-  yourDataSource = new MatTableDataSource<AnnualLeaveByUsernameResponse>([]);
-  toApproveDataSource = new MatTableDataSource<AnnualLeaveByUsernameResponse>(
-    []
-  );
+  yourDataSource = new MatTableDataSource<AnnualLeaveResponse>([]);
+  toApproveDataSource = new MatTableDataSource<AnnualLeaveResponse>([]);
   error = false;
   isLoadingAnnualLeaves = false;
   requestAnnualLeaveForm = new FormGroup({
@@ -86,6 +84,7 @@ export class AnnualLeaveComponent implements OnInit {
     end: new FormControl(moment().add(7, 'days'), [Validators.required]),
   });
   daysLeftOfAnnualLeave?: number;
+  sub = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
@@ -96,6 +95,18 @@ export class AnnualLeaveComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authService.currentUserValue;
+    this.sub = this.annualLeaveService.annulaLeaveEvent
+      .pipe(delay(300))
+      .subscribe(() => {
+        if (this.role !== Role.Owner) {
+          this.getAnnualLeavesByUsername();
+          this.getDaysLeft();
+        }
+
+        if (this.role !== Role.Employee) {
+          this.getAllAnnualLeaves();
+        }
+      });
 
     this.route.data.subscribe((data) => {
       this.role = data['role'];
@@ -111,6 +122,10 @@ export class AnnualLeaveComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
   getDate7DaysInFuture(): Date {
     const today = new Date();
     today.setDate(today.getDate() + 7); // Add 7 days to the current date
@@ -123,10 +138,7 @@ export class AnnualLeaveComponent implements OnInit {
       .getAnnualLeavesByUsername(this.user.username)
       .pipe(finalize(() => (this.isLoadingAnnualLeaves = false)))
       .subscribe({
-        next: (annualLeaves) => {
-          this.yourDataSource.data = annualLeaves;
-          console.log(annualLeaves);
-        },
+        next: (annualLeaves) => (this.yourDataSource.data = annualLeaves),
         error: (error) => {
           this.error = true;
           this.snackBar.open(error, '', { duration: 2000 });
@@ -150,9 +162,6 @@ export class AnnualLeaveComponent implements OnInit {
           this.snackBar.open('Your annual leave request has been sent.', '', {
             duration: 2000,
           });
-
-          this.getDaysLeft();
-          this.getAnnualLeavesByUsername();
         },
         error: (error) => this.snackBar.open(error, '', { duration: 2000 }),
       });
@@ -173,9 +182,7 @@ export class AnnualLeaveComponent implements OnInit {
 
   getAllAnnualLeaves() {
     this.annualLeaveService.getAllAnnualLeaves().subscribe({
-      next: (annualLeaves) => {
-        this.toApproveDataSource.data = annualLeaves;
-      },
+      next: (annualLeaves) => (this.toApproveDataSource.data = annualLeaves),
       error: (error) => {
         this.toApproveDataSource.data = [];
         this.snackBar.open(error, '', { duration: 2000 });
@@ -185,7 +192,6 @@ export class AnnualLeaveComponent implements OnInit {
 
   approveAnnualLeave(employeeUsername: string) {
     this.annualLeaveService.approveAnnualLeave(employeeUsername).subscribe({
-      next: () => this.getAllAnnualLeaves(),
       error: (error) => {
         this.snackBar.open(error, '', { duration: 2000 });
       },

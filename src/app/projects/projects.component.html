@@ -8,9 +8,9 @@
       View and manage the list of all projects. Click "Add Project" to create a
       new entry. You can also update or delete existing projects as needed.
     </p>
-    } @if (role === Role.Manager) {
+    }
     <p class="max-w-600">Add or remove developers from projects.</p>
-    } @if (role === Role.Owner) {
+    @if (role === Role.Owner) {
     <button
       class="basic-button"
       color="primary"
@@ -141,19 +141,20 @@
         [formGroup]="removeDeveloperForm"
         (ngSubmit)="removeDeveloperFromProject()"
       >
-      <mat-form-field appearance="outline">
-        <mat-label>Employee username</mat-label>
-        <mat-select formControlName="employeeUsername">
-          <mat-option>--</mat-option>
-          @for (username of managedEmployeeUsernames; track username) {
-          <mat-option [value]="username">{{ username }}</mat-option>
+        <mat-form-field appearance="outline">
+          <mat-label>Employee username</mat-label>
+          <mat-select formControlName="employeeUsername">
+            <mat-option>--</mat-option>
+            @for (username of managedEmployeeUsernames; track username) {
+            <mat-option [value]="username">{{ username }}</mat-option>
+            }
+          </mat-select>
+          @if
+          (removeDeveloperForm.controls['employeeUsername'].hasError('required'))
+          {
+          <mat-error>Please choose an employee</mat-error>
           }
-        </mat-select>
-        @if
-        (removeDeveloperForm.controls['employeeUsername'].hasError('required')) {
-        <mat-error>Please choose an employee</mat-error>
-        }
-      </mat-form-field>
+        </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Project id</mat-label>
           <input formControlName="projectId" matInput placeholder="e.g 1" />

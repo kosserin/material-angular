@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageHeaderComponent } from '../page-header/page-header.component';
 import { ManagementService } from '../core/services/management.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,6 +14,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ManagementResponse } from '../core/models/management.model';
 import { Role } from '../core/models/role';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-management',
@@ -28,7 +29,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './management.component.html',
   styleUrl: './management.component.scss',
 })
-export class ManagementComponent implements OnInit {
+export class ManagementComponent implements OnInit, OnDestroy {
   searchForm!: FormGroup;
   assignForm!: FormGroup;
   updateForm!: FormGroup;
@@ -38,6 +39,7 @@ export class ManagementComponent implements OnInit {
   error = false;
   role!: Role;
   Role = Role;
+  sub = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
@@ -47,10 +49,18 @@ export class ManagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.sub = this.managementService.managementEvent.subscribe(() => {
+      console.log('entered');
+      
+      if (this.role === Role.Owner) {
+        this.getManagements();
+      }
+    });
+
     this.route.data.subscribe((data) => {
       this.role = data['role'];
       if (this.role === Role.Owner) {
-        this.loadAllProjects();
+        this.getManagements();
       }
     });
 
@@ -67,7 +77,11 @@ export class ManagementComponent implements OnInit {
     });
   }
 
-  loadAllProjects() {
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
+  getManagements() {
     this.managementService.getManagements().subscribe({
       next: (managements) => (this.dataSource.data = managements),
       error: (error) => {

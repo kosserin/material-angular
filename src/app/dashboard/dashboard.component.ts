@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Role } from '../core/models/role';
@@ -16,6 +16,7 @@ import {
   CanvasJSAngularChartsModule,
 } from '@canvasjs/angular-charts';
 import { EntityType } from '../core/models/entity-type.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,7 +31,7 @@ import { EntityType } from '../core/models/entity-type.model';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   role!: Role;
   user!: User;
   Role = Role;
@@ -39,6 +40,7 @@ export class DashboardComponent implements OnInit {
   reports?: Report[];
   reportEntityTypes: EntityType[] = [];
   reportsByEntityType: { [key: string]: any[] } = {};
+  sub = new Subscription();
 
   chartOptions = {
     animationEnabled: true,
@@ -97,6 +99,16 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authService.currentUserValue;
+    this.sub = this.reportService.reportEvent.subscribe(() => {
+      if (this.role === Role.Owner) {
+        this.getAllReports();
+      }
+
+      if (this.role === Role.Employee) {
+        this.getManagerByEmployeesName();
+        this.getProjectsByEmployeeUsername();
+      }
+    });
 
     this.route.data.subscribe((data) => {
       this.role = data['role'];
@@ -110,6 +122,10 @@ export class DashboardComponent implements OnInit {
         this.getProjectsByEmployeeUsername();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 
   getAllReports() {

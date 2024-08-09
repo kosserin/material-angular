@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Report } from '../models/report.model';
 import { NotificationRequest } from '../models/notification-response.model';
@@ -8,6 +8,8 @@ import { NotificationRequest } from '../models/notification-response.model';
   providedIn: 'root',
 })
 export class ReportService {
+  reportEvent = new EventEmitter<void>();
+
   constructor(private http: HttpClient) {}
 
   getAllReports() {

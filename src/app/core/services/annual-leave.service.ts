@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import {
-  AnnualLeaveByUsernameResponse,
+  AnnualLeaveResponse,
   AnnualLeaveRequest,
 } from '../models/annual-leave.model';
 
@@ -10,6 +10,8 @@ import {
   providedIn: 'root',
 })
 export class AnnualLeaveService {
+  annulaLeaveEvent = new EventEmitter<void>();
+
   constructor(private http: HttpClient) {}
 
   getAnnualLeaveById(id: string) {
@@ -34,20 +36,17 @@ export class AnnualLeaveService {
 
   getAnnualLeavesByUsername(employeeUsername: string) {
     const url = `${environment.apiUrl}annual_leave_developer/${employeeUsername}`;
-    return this.http.get<AnnualLeaveByUsernameResponse[]>(url);
+    return this.http.get<AnnualLeaveResponse[]>(url);
   }
 
   requestAnnualLeave(annualLeaveRequest: AnnualLeaveRequest) {
     const url = `${environment.apiUrl}annual_leave_developer/request`;
-    return this.http.post<AnnualLeaveByUsernameResponse>(
-      url,
-      annualLeaveRequest
-    );
+    return this.http.post<AnnualLeaveResponse>(url, annualLeaveRequest);
   }
 
   // Manager and employee
   getAllAnnualLeaves() {
     const url = `${environment.apiUrl}annual_leave_manager`;
-    return this.http.get<AnnualLeaveByUsernameResponse[]>(url);
+    return this.http.get<AnnualLeaveResponse[]>(url);
   }
 }

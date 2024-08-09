@@ -1,6 +1,12 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { PageHeaderComponent } from '../page-header/page-header.component';
-import { finalize, map } from 'rxjs';
+import { BehaviorSubject, map, Subscription } from 'rxjs';
 import { UserItem } from '../core/models/user-list.model';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -10,7 +16,7 @@ import { UserService } from '../core/services/user.service';
 import { MatButtonModule } from '@angular/material/button';
 import { UserTitle } from '../core/models/user-title.model';
 import { AuthService } from '../auth.service';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { PageRequest } from '../core/models/page-request.model';
 
 @Component({
@@ -26,8 +32,8 @@ import { PageRequest } from '../core/models/page-request.model';
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
-export class UsersComponent implements OnInit, AfterViewInit {
-  users: UserItem[] = [];
+export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
+  users$!: BehaviorSubject<UserItem[]>;
   error = false;
   displayedColumns: string[] = [
     'username',
@@ -51,6 +57,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     sortOrder: 'asc',
   };
 
+  sub = new Subscription();
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -62,6 +70,16 @@ export class UsersComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    this.sub = this.userService.userEvent.subscribe(() => {
+      console.log('from here');
+      
+      if (this.role === Role.Employee) {
+        this.getManager();
+      } else {
+        this.loadUsers();
+      }
+    });
+
     this.route.data.subscribe((data) => {
       this.role = data['role'];
       if (this.role === Role.Employee) {
@@ -70,6 +88,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.loadUsers();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 
   ngAfterViewInit() {

@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { UserItem } from '../models/user-list.model';
 import { Role } from '../models/role';
@@ -10,6 +10,8 @@ import { PageResponse } from '../models/page.model';
   providedIn: 'root',
 })
 export class UserService {
+  userEvent = new EventEmitter<void>();
+
   constructor(private http: HttpClient) {}
 
   getUsers(pageRequest: PageRequest) {
@@ -35,14 +37,7 @@ export class UserService {
   }
 
   updateUser(formData: UserItem, role: Role) {
-    let url = '';
-    if (role === Role.Manager) {
-      url = `${environment.apiUrl}users`;
-    }
-
-    if (role === Role.Owner) {
-      url = `${environment.apiUrl}owner/${formData.username}`;
-    }
+    const url = `${environment.apiUrl}users`;
 
     return this.http.patch<UserItem>(url, formData);
   }

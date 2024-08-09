@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ManagementResponse } from '../models/management.model';
 
@@ -7,6 +7,8 @@ import { ManagementResponse } from '../models/management.model';
   providedIn: 'root',
 })
 export class ManagementService {
+  managementEvent = new EventEmitter<void>();
+
   constructor(private http: HttpClient) {}
 
   // owner only

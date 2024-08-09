@@ -5,7 +5,7 @@ export interface AnnualLeaveRequest {
   end: string;
 }
 
-export interface AnnualLeaveByUsernameResponse {
+export interface AnnualLeaveResponse {
   id: 1;
   start: string;
   end: string;
