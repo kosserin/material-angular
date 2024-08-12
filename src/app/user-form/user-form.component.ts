@@ -111,6 +111,9 @@ export class UserFormComponent implements OnInit {
           ]),
         }),
       });
+
+      this.userForm.controls['roleList'].setValue([Role.Employee]);
+      this.userForm.controls['roleList'].disable();
     });
   }
 
