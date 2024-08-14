@@ -91,7 +91,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.loadAllProjects();
       }
 
-      if (this.role === Role.Manager) {
+      if (this.role !== Role.Employee) {
         this.getAllManagementsForManager();
       }
     });
@@ -103,7 +103,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.loadAllProjects();
       }
 
-      if (this.role === Role.Manager) {
+      if (this.role !== Role.Employee) {
         this.getAllManagementsForManager();
       }
     });

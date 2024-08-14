@@ -103,7 +103,9 @@ export class UserFormComponent implements OnInit {
         title: new FormControl(user?.title ?? UserTitle.Junior, [
           Validators.required,
         ]),
-        roleList: new FormControl(user?.roleList ?? [], [Validators.required]),
+        roleList: new FormControl(user?.roleList ?? [Role.Employee], [
+          Validators.required,
+        ]),
         city: new FormGroup({
           name: new FormControl(user?.city.name ?? '', [Validators.required]),
           postalcode: new FormControl(user?.city.postalcode ?? '', [
@@ -112,8 +114,9 @@ export class UserFormComponent implements OnInit {
         }),
       });
 
-      this.userForm.controls['roleList'].setValue([Role.Employee]);
-      this.userForm.controls['roleList'].disable();
+      if (this.role === Role.Manager) {
+        this.userForm.controls['roleList'].disable();
+      }
     });
   }
 
