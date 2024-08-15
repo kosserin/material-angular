@@ -12,10 +12,12 @@
       You work on:
       <b>{{ userProjectsNames }}</b>
     </h3>
+    } @if (role === Role.Owner &&!loadingAverageTimeReports &&
+    !errorAverageTimeReports) {
+    <div class="bar-chart">
+      <canvasjs-chart [options]="barOptions"></canvasjs-chart>
+    </div>
     }
     <div id="chartsArea"></div>
-    @if (!loadingAverageTimeReports && !errorAverageTimeReports) {
-    <canvasjs-chart [options]="barOptions"></canvasjs-chart>
-    }
   </section>
 </main>
