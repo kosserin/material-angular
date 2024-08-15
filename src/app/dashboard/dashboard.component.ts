@@ -16,7 +16,7 @@ import {
   CanvasJSAngularChartsModule,
 } from '@canvasjs/angular-charts';
 import { EntityType } from '../core/models/entity-type.model';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,6 +41,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   reportEntityTypes: EntityType[] = [];
   reportsByEntityType: { [key: string]: any[] } = {};
   sub = new Subscription();
+  loadingAverageTimeReports = false;
+  errorAverageTimeReports = false;
 
   chartOptions = {
     animationEnabled: true,
@@ -87,6 +89,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ],
   };
 
+  barOptions = {};
+
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,
@@ -102,6 +106,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.sub = this.reportService.reportEvent.subscribe(() => {
       if (this.role === Role.Owner) {
         this.getAllReports();
+        this.getAverageTimesReports();
       }
 
       if (this.role === Role.Employee) {
@@ -115,6 +120,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       if (this.role === Role.Owner) {
         this.getAllReports();
+        this.getAverageTimesReports();
       }
 
       if (this.role === Role.Employee) {
@@ -146,6 +152,50 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
       error: (error) => this.snackBar.open(error, '', { duration: 2000 }),
     });
+  }
+
+  getAverageTimesReports() {
+    this.loadingAverageTimeReports = true;
+    this.reportService
+      .getAverageTimesReports()
+      .pipe(finalize(() => (this.loadingAverageTimeReports = false)))
+      .subscribe({
+        next: (reports) => {
+          const dataPoints: { label: string; y: number }[] = reports.map(
+            (report) => {
+              if (report.transmissionType === null) {
+                return {
+                  label: 'WebSocket',
+                  y: report.averageTime,
+                };
+              }
+
+              return {
+                label: `${report.entityType}-${report.transmissionType}`,
+                y: report.averageTime,
+              };
+            }
+          );
+          this.barOptions = {
+            title: {
+              text: 'Average Times for reports',
+            },
+            axisY: {
+              title: 'Time (ms)',
+            },
+            data: [
+              {
+                type: 'column',
+                dataPoints,
+              },
+            ],
+          };
+        },
+        error: (error) => {
+          this.errorAverageTimeReports = true;
+          this.snackBar.open(error, '', { duration: 2000 });
+        },
+      });
   }
 
   renderCharts() {

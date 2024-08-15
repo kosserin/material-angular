@@ -14,5 +14,8 @@
     </h3>
     }
     <div id="chartsArea"></div>
+    @if (!loadingAverageTimeReports && !errorAverageTimeReports) {
+    <canvasjs-chart [options]="barOptions"></canvasjs-chart>
+    }
   </section>
 </main>

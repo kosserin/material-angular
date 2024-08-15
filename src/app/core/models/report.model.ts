@@ -10,3 +10,9 @@ export interface Report {
   objectId: string;
   payload: any;
 }
+
+export interface AverageTimeReport {
+  entityType: EntityType;
+  transmissionType: TransmissionType;
+  averageTime: number;
+}
