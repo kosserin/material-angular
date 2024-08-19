@@ -17,6 +17,7 @@ import {
 } from '@canvasjs/angular-charts';
 import { EntityType } from '../core/models/entity-type.model';
 import { finalize, Subscription } from 'rxjs';
+import { ChartOptions } from '../core/models/chart-options.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -89,7 +90,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ],
   };
 
-  barOptions = {};
+  barOptions: ChartOptions = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -161,35 +162,108 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => (this.loadingAverageTimeReports = false)))
       .subscribe({
         next: (reports) => {
-          const dataPoints: { label: string; y: number }[] = reports.map(
-            (report) => {
-              if (report.transmissionType === null) {
-                return {
-                  label: 'WebSocket',
-                  y: report.averageTime,
-                };
-              }
+          const dataMap: { [key: string]: { [key: string]: number } } = {};
 
-              return {
-                label: `${report.entityType}-${report.transmissionType}`,
-                y: report.averageTime,
-              };
+          // Group data by entityType and transmissionType
+          reports.forEach((report) => {
+            const { entityType, transmissionType, averageTime } = report;
+
+            // Check if both entityType and transmissionType are null
+            if (entityType === null && transmissionType === null) {
+              if (!dataMap['WebSocket']) {
+                dataMap['WebSocket'] = { WebSocket: averageTime };
+              } else {
+                dataMap['WebSocket']['WebSocket'] = averageTime;
+              }
+            } else {
+              if (!dataMap[entityType]) {
+                dataMap[entityType] = {};
+              }
+              if (transmissionType === null) {
+                dataMap[entityType]['WebSocket'] = averageTime;
+              } else {
+                dataMap[entityType][transmissionType] = averageTime;
+              }
             }
-          );
+          });
+
+          // Prepare data for chart
+          const httpDataPoints: { label: string; y: number }[] = [];
+          const kafkaDataPoints: { label: string; y: number }[] = [];
+          const websocketDataPoints: { label: string; y: number }[] = [];
+
+          Object.keys(dataMap).forEach((entityType) => {
+            if (entityType === 'WebSocket') {
+              websocketDataPoints.push({
+                label: entityType,
+                y: dataMap[entityType]['WebSocket'],
+              });
+            } else {
+              httpDataPoints.push({
+                label: entityType,
+                y: dataMap[entityType]['HTTP'],
+              });
+              kafkaDataPoints.push({
+                label: entityType,
+                y: dataMap[entityType]['KAFKA'],
+              });
+              websocketDataPoints.push({
+                label: entityType,
+                y: dataMap[entityType]['WebSocket'] || 0,
+              });
+            }
+          });
           this.barOptions = {
+            animationEnabled: true,
             title: {
               text: 'Average Times for reports',
             },
             axisY: {
               title: 'Time (ms)',
             },
-            data: [
-              {
-                type: 'column',
-                dataPoints,
+            axisX: {
+              title: 'Entity types',
+            },
+            toolTip: {
+              shared: false,
+            },
+            legend: {
+              cursor: 'pointer',
+              itemclick: function (e: any) {
+                if (
+                  typeof e.dataSeries.visible === 'undefined' ||
+                  e.dataSeries.visible
+                ) {
+                  e.dataSeries.visible = false;
+                } else {
+                  e.dataSeries.visible = true;
+                }
+                e.chart.render();
               },
-            ],
+            },
+            data: [],
           };
+          this.barOptions.data!.push({
+            type: 'column',
+            name: 'HTTP',
+            legendText: 'HTTP',
+            showInLegend: true,
+            dataPoints: httpDataPoints,
+          });
+          this.barOptions.data!.push({
+            type: 'column',
+            name: 'KAFKA',
+            legendText: 'KAFKA',
+            showInLegend: true,
+            dataPoints: kafkaDataPoints,
+          });
+          this.barOptions.data!.push({
+            type: 'column',
+            name: 'WebSocket',
+            legendText: 'WebSocket',
+            showInLegend: false,
+            dataPoints: websocketDataPoints,
+          });
         },
         error: (error) => {
           this.errorAverageTimeReports = true;
