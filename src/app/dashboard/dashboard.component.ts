@@ -20,17 +20,16 @@ import { finalize, Subscription } from 'rxjs';
 import { ChartOptions } from '../core/models/chart-options.model';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [
-    MatIcon,
-    MatButtonModule,
-    RouterModule,
-    PageHeaderComponent,
-    CanvasJSAngularChartsModule,
-  ],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss',
+    selector: 'app-dashboard',
+    imports: [
+        MatIcon,
+        MatButtonModule,
+        RouterModule,
+        PageHeaderComponent,
+        CanvasJSAngularChartsModule,
+    ],
+    templateUrl: './dashboard.component.html',
+    styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   role!: Role;

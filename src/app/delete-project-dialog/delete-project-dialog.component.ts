@@ -12,17 +12,16 @@ import { ProjectService } from '../core/services/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-delete-project-dialog',
-  templateUrl: './delete-project-dialog.component.html',
-  styleUrls: ['./delete-project-dialog.component.scss'],
-  standalone: true,
-  imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatButtonModule,
-    MatDialogModule,
-  ],
+    selector: 'app-delete-project-dialog',
+    templateUrl: './delete-project-dialog.component.html',
+    styleUrls: ['./delete-project-dialog.component.scss'],
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatButtonModule,
+        MatDialogModule,
+    ]
 })
 export class DeleteProjectDialogComponent {
   constructor(

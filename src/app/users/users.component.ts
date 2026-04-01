@@ -20,17 +20,16 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { PageRequest } from '../core/models/page-request.model';
 
 @Component({
-  selector: 'app-users',
-  standalone: true,
-  imports: [
-    PageHeaderComponent,
-    MatTableModule,
-    MatPaginatorModule,
-    MatButtonModule,
-    MatSortModule,
-  ],
-  templateUrl: './users.component.html',
-  styleUrl: './users.component.scss',
+    selector: 'app-users',
+    imports: [
+        PageHeaderComponent,
+        MatTableModule,
+        MatPaginatorModule,
+        MatButtonModule,
+        MatSortModule,
+    ],
+    templateUrl: './users.component.html',
+    styleUrl: './users.component.scss'
 })
 export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   users$!: BehaviorSubject<UserItem[]>;

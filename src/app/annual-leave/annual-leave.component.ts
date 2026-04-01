@@ -42,26 +42,25 @@ const MY_DATE_FORMAT = {
 };
 
 @Component({
-  selector: 'app-annual-leave',
-  standalone: true,
-  imports: [
-    PageHeaderComponent,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatDatepickerModule,
-  ],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMAT },
-  ],
-  templateUrl: './annual-leave.component.html',
-  styleUrl: './annual-leave.component.scss',
+    selector: 'app-annual-leave',
+    imports: [
+        PageHeaderComponent,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+    ],
+    providers: [
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE],
+        },
+        { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMAT },
+    ],
+    templateUrl: './annual-leave.component.html',
+    styleUrl: './annual-leave.component.scss'
 })
 export class AnnualLeaveComponent implements OnInit, OnDestroy {
   role!: Role;

@@ -17,17 +17,16 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-management',
-  standalone: true,
-  imports: [
-    PageHeaderComponent,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatTableModule,
-  ],
-  templateUrl: './management.component.html',
-  styleUrl: './management.component.scss',
+    selector: 'app-management',
+    imports: [
+        PageHeaderComponent,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatTableModule,
+    ],
+    templateUrl: './management.component.html',
+    styleUrl: './management.component.scss'
 })
 export class ManagementComponent implements OnInit, OnDestroy {
   searchForm!: FormGroup;

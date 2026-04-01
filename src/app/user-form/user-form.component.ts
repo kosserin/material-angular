@@ -22,19 +22,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserItem } from '../core/models/user-list.model';
 
 @Component({
-  selector: 'app-user-form',
-  standalone: true,
-  imports: [
-    PageHeaderComponent,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-  ],
-  templateUrl: './user-form.component.html',
-  styleUrl: './user-form.component.scss',
+    selector: 'app-user-form',
+    imports: [
+        PageHeaderComponent,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSelectModule,
+    ],
+    templateUrl: './user-form.component.html',
+    styleUrl: './user-form.component.scss'
 })
 export class UserFormComponent implements OnInit {
   role!: Role;

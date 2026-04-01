@@ -22,19 +22,18 @@ import { futureDateValidator } from '../core/validators/future-date.validator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-project-form',
-  standalone: true,
-  imports: [
-    PageHeaderComponent,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-  ],
-  templateUrl: './project-form.component.html',
-  styleUrl: './project-form.component.scss',
+    selector: 'app-project-form',
+    imports: [
+        PageHeaderComponent,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSelectModule,
+    ],
+    templateUrl: './project-form.component.html',
+    styleUrl: './project-form.component.scss'
 })
 export class ProjectFormComponent implements OnInit {
   role!: Role;

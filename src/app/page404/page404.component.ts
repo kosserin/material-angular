@@ -7,11 +7,10 @@ import { PageHeaderComponent } from '../page-header/page-header.component';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-page404',
-  standalone: true,
-  imports: [RouterModule, MatButtonModule, PageHeaderComponent],
-  templateUrl: './page404.component.html',
-  styleUrl: './page404.component.scss',
+    selector: 'app-page404',
+    imports: [RouterModule, MatButtonModule, PageHeaderComponent],
+    templateUrl: './page404.component.html',
+    styleUrl: './page404.component.scss'
 })
 export class Page404Component implements OnInit {
   user!: User;

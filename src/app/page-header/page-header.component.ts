@@ -7,11 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-page-header',
-  standalone: true,
-  imports: [MatIcon, MatButtonModule, RouterModule],
-  templateUrl: './page-header.component.html',
-  styleUrl: './page-header.component.scss',
+    selector: 'app-page-header',
+    imports: [MatIcon, MatButtonModule, RouterModule],
+    templateUrl: './page-header.component.html',
+    styleUrl: './page-header.component.scss'
 })
 export class PageHeaderComponent {
   role!: Role;
